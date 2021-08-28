@@ -5,6 +5,7 @@ const randomColor = require('randomcolor');
 const createBoard = require('./create-board');
 const createCooldown = require('./create-cooldown');
 
+
 const app = express();
 
 app.use(express.static(`${__dirname}/../client`));
@@ -13,7 +14,16 @@ user_board = [2, 4, 5];
 const server = http.createServer(app);
 const io = socketio(server);
 const { clear, getBoard, makeTurn } = createBoard(20);
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
 
+var TEST, number,status;
 io.on('connection', (sock) => {
 	const color = randomColor();
 	const cooldown = createCooldown(2000);
@@ -28,12 +38,30 @@ io.on('connection', (sock) => {
 	// sock.emit('turnNo',(number));
 	// sock.on('nextTurn', (number) => io.emit('message', text));
 	sock.on('message', (text) => io.emit('message', text));
+	sock.on('submitted', () =>{
+		TEST = [...Array(9).keys()]
+		console.log(TEST)
+		shuffleArray(TEST);
+		console.log(TEST);
+		io.emit('make board');
+	})
   sock.on('turnDone', () => {
-    var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
+	
+	if(TEST.length){
+		number = TEST[(TEST.length) - 1];
+		TEST.pop();
+		console.log(number);
+		io.emit('nextTurnCard', number);
+	}
+	else{
+	    //   status = "Game Over!";
+		//   io.emit('message', status);	
+	}
+	
+    // var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
     // var turnAnnoucement = "Next turn has begun! The card number is: " + number;
-    io.emit('nextTurnCard', number)});
+    });
 
-	sock.on('chutiye', (shit) => io.emit('message', shit))
 	// sock.on('turndone',(marked) => io.emit('message', marked));
 	sock.on('turn', ({ x, y }) => {
 		if (cooldown()) {
@@ -90,37 +118,6 @@ var options = [
 	},
 ];
 
-function myFunction() {
-	var x = document.getElementById("frm1");
-	var row = x.elements[0].value;
-	var optionc = x.elements[1].value;
-	var text = "";
-	var i = -1;
-	var s = "";
-	var dict = {};
-	// (i = -1), (j = 0), (s = "");
-	for (var i = 0; i < options.length; i++) {
-		if (options[i]["name"] == optionc) {
-			dict = options[i];
-		}
-	}
-	var cardno = 0;
-	for (i = 0; i < parseInt(row, 10); i++) {
-		s += '<div class="row">';
-		for (j = 0; j < parseInt(row, 10); j++) {
-			s +=
-				'<div class="cell" id="' +
-				cardno +
-				'">' +
-				dict["cards"][cardno] +
-				"</div>";
-			cardno++;
-		}
-
-		s += "</div>";
-	}
-	document.getElementById("demo").innerHTML = s;
-}
 
 // $(document).ready(function () {
 // 	$(".cell").click(function () {
