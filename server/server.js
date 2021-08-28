@@ -18,16 +18,21 @@ io.on('connection', (sock) => {
 	const color = randomColor();
 	const cooldown = createCooldown(2000);
 
-	sock.on('turndone', () => io.emit('message', "number"));
+	// sock.on('turndone', () => io.emit('message', "number"));
 	//   sock.on('turndone',() => {
-	//     var number = Math.random() * (8 - 0 + 1) + 0;
+
 	//   makePurple();
 	//  	  io.emit('received');
 	//     io.emit('message', number);
 	//   });
 	// sock.emit('turnNo',(number));
-	sock.on('nextTurn', (number) => io.emit('message', text));
+	// sock.on('nextTurn', (number) => io.emit('message', text));
 	sock.on('message', (text) => io.emit('message', text));
+  sock.on('turnDone', () => {
+    var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
+    // var turnAnnoucement = "Next turn has begun! The card number is: " + number;
+    io.emit('nextTurnCard', number)});
+
 	sock.on('chutiye', (shit) => io.emit('message', shit))
 	// sock.on('turndone',(marked) => io.emit('message', marked));
 	sock.on('turn', ({ x, y }) => {

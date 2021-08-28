@@ -20,27 +20,30 @@
         </form>
       </div>
     </div>
-  </div>
-  <form id="frm1">
-    rows:
-    <input type="number" name="rows" value="3" /><br />
-    option:
-    <input type="text" name="optionc" /><br /><br />
-  </form>
-
-  <button onclick="myFunction()">Submit</button>
-
-  <div id="demo">
-
-  </div>
-  <form id="turnbtn">
-    <button>
-      Complete Turn
+    <div class="controls">
+      <div class="chat-wrapper">
+        <form id="turn-form">
+          <button id="turnbtn">Turn Complete</button>
+        </form>
+      </div>
+    </div>
+    <form id="frm1">
+      rows:
+      <input type="number" name="rows" value="3" /><br />
+      option:
+      <input type="text" name="optionc" /><br /><br />
+    </form>
+  
+    <button onclick="myFunction()">Submit</button>
+  
+    <div id="demo">
+  
+    </div>
+    <button id="lodu-kaam-kar" onclick="lite()">
+      ABEY YAAR
     </button>
-  </form>
-  <button id="lodu-kaam-kar" onclick="lite()">
-    ABEY YAAR
-  </button>
+  </div>
+  
   <script src=" /socket.io/socket.io.js"></script>
   <script src="src/client.js"></script>
 </body>

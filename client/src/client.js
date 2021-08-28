@@ -18,7 +18,7 @@ var options = [
     type: "default",
   },
 ];
-
+var dict = {};
 function myFunction() {
   var x = document.getElementById("frm1");
   var row = x.elements[0].value;
@@ -26,7 +26,6 @@ function myFunction() {
   var text = "";
   var i = -1;
   var s = "";
-  var dict = {};
   // (i = -1), (j = 0), (s = "");
   for (var i = 0; i < options.length; i++) {
     if (options[i]["name"] == optionc) {
@@ -83,12 +82,15 @@ const log = (text) => {
   parent.scrollTop = parent.scrollHeight;
 };
 
-const turndone = (sock) => (e) => {
-  e.preventDefault();
-  // console.log("sent msg to server");
-  // sock.emit('turndone');
-};
+const getNextCard = (number) => {
+  const parent = document.querySelector('#events');
+  const el = document.createElement('li');
+  var text = "next card: " + dict["cards"][number]
+  el.innerHTML = text;
 
+  parent.appendChild(el);
+  parent.scrollTop = parent.scrollHeight;
+};
 
 const onChatSubmitted = (sock) => (e) => {
   e.preventDefault();
@@ -98,6 +100,16 @@ const onChatSubmitted = (sock) => (e) => {
   input.value = '';
 
   sock.emit('message', text);
+};
+
+const onTurnDone = (sock) => (e) => {
+  e.preventDefault();
+
+  // const input = document.querySelector('#turnchat');
+  // const text = input.value;
+  // input.value = '';
+
+  sock.emit('turnDone');
 };
 
 const getClickCoordinates = (element, ev) => {
@@ -176,20 +188,17 @@ const getBoard = (canvas, numCells = 20) => {
     const { x, y } = getClickCoordinates(canvas, e);
     sock.emit('turn', getCellCoordinates(x, y));
   };
-  
-  const lite = (sock) => {
-    console.log("sent msg to server");
-    let shit = "poop"
-    sock.emit('chutiye', shit);
-  };
 
+ 
 
   sock.on('board', reset);
   sock.on('message', log);
+  sock.on('nextTurnCard', getNextCard);
   sock.on('turn', ({ x, y, color }) => fillCell(x, y, color));
   sock.on('turnNo', (number) => getNumber(number));
   document.querySelector('#chat-form').addEventListener('submit', onChatSubmitted(sock));
-  document.querySelector('#turnbtn').addEventListenser('submit', turndone(sock));
+  document.querySelector('#turn-form').addEventListener('submit', onTurnDone(sock));
+  // document.querySelector('#turnbtn').addEventListenser('click', turndone(sock));
   canvas.addEventListener('click', onClick);
 
 
