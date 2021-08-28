@@ -1,30 +1,52 @@
-  const inBounds = (x, y) => {
-    return y >= 0 && y < board.length && x >= 0 && x < board[y].length;
-  };
+<!DOCTYPE html>
+<html lang="en">
 
-  const numMatches = (x, y, dx, dy) => {
-    let i = 1;
-    while (inBounds(x + i*dx, y + i*dy) &&
-    board[y + i*dy][x + i*dx] === board[y][x]) {
-      i++;
-    }
-    return i - 1;
-  };
+<head>
+  <title>my game</title>
+  <link rel="icon" href="img/favicon.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
 
-  const isWinningTurn = (x, y) => {
-    for (let dx = -1; dx < 2; dx++) {
-      for (let dy = -1; dy < 2; dy++) {
-        if (dx === 0 && dy === 0) {
-          continue;
-        }
+<body>
+  <canvas height="0" width="0"></canvas>
+  <div class="controls-wrapper">
+    <ul id="events"></ul>
+    <div class="controls">
+      <div class="chat-wrapper">
+        <form id="chat-form">
+          <input id="chat" autocomplete="off" title="chat" />
+          <button id="say">Say</button>
+        </form>
+        <form id="turn-form"></form>
+          <button>Turn Done</button>
+        </form>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="chat-wrapper">
+       
+      </div>
+    </div>
+    <form id="frm1">
+      rows:
+      <input type="number" name="rows" value="3" /><br />
+      option:
+      <input type="text" name="optionc" required/><br /><br />
+      Name:
+      <input type="text" name="name" required/><br /><br />
+    </form>
+  
+    <button onclick="myFunction()">Submit</button>
+  
+    <div id="demo">
+  
+    </div>
+  </div>
+  
+  <script src=" /socket.io/socket.io.js"></script>
+  <script src="src/client.js"></script>
+</body>
 
-        const count = numMatches(x, y, dx, dy) +
-          numMatches(x, y, -dx, -dy) + 1;
+</html>
 
-        if (count > 4) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };

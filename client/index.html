@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <!-- <canvas height="400" width="400"></canvas> -->
+  <canvas height="0" width="0"></canvas>
   <div class="controls-wrapper">
     <ul id="events"></ul>
     <div class="controls">
@@ -31,7 +31,9 @@
       rows:
       <input type="number" name="rows" value="3" /><br />
       option:
-      <input type="text" name="optionc" /><br /><br />
+      <input type="text" name="optionc" required/><br /><br />
+      Name:
+      <input type="text" name="name" required/><br /><br />
     </form>
   
     <button onclick="myFunction()">Submit</button>
@@ -39,9 +41,6 @@
     <div id="demo">
   
     </div>
-    <button id="lodu-kaam-kar" onclick="lite()">
-      ABEY YAAR
-    </button>
   </div>
   
   <script src=" /socket.io/socket.io.js"></script>
@@ -50,33 +49,3 @@
 
 </html>
 
-<!--
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<link rel="stylesheet" href="styles.css" />
-		
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-		<title>GAME</title>
-	</head>
-	<body>
-		<form id="frm1">
-			rows:
-			<input type="number" name="rows" value="3" /><br />
-	columns:
-			<input type="number" name="columns" /><br /> 
-			option:
-			<input type="text" name="optionc" /><br /><br />
-		</form>
-
-		<button onclick="myFunction()">Submit</button>
-
-		<div id="demo"></div>
-
-		<script src="script.js"></script>
-	</body>
-</html> 
--->
