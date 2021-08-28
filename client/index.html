@@ -1,25 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>my game</title>
-    <link rel="icon" href="img/favicon.png">
-    <link rel="stylesheet" href="styles/main.css">
-  </head>
-  <body>
-    <canvas height="400" width="400"></canvas>
-    <div class="controls-wrapper">
-      <ul id="events"></ul>
-      <div class="controls">
-        <div class="chat-wrapper">
-          <form id="chat-form">
-            <input id="chat" autocomplete="off" title="chat"/>
-            <button id="say">Say</button>
-          </form>
-        </div>
+
+<head>
+  <title>my game</title>
+  <link rel="icon" href="img/favicon.png">
+  <link rel="stylesheet" href="styles/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <canvas height="400" width="400"></canvas>
+  <div class="controls-wrapper">
+    <ul id="events"></ul>
+    <div class="controls">
+      <div class="chat-wrapper">
+        <form id="chat-form">
+          <input id="chat" autocomplete="off" title="chat" />
+          <button id="say">Say</button>
+        </form>
       </div>
     </div>
+  </div>
+  <form id="frm1">
+    rows:
+    <input type="number" name="rows" value="3" /><br />
+    option:
+    <input type="text" name="optionc" /><br /><br />
+  </form>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="src/client.js"></script>
-  </body>
+  <button onclick="myFunction()">Submit</button>
+
+  <div id="demo">
+
+  </div>
+  <form id="turnbtn">
+    <button>
+      Complete Turn
+    </button>
+  </form>
+  <button id="lodu-kaam-kar" onclick="lite()">
+    ABEY YAAR
+  </button>
+  <script src=" /socket.io/socket.io.js"></script>
+  <script src="src/client.js"></script>
+</body>
+
 </html>
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="styles.css" />
+		
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>GAME</title>
+	</head>
+	<body>
+		<form id="frm1">
+			rows:
+			<input type="number" name="rows" value="3" /><br />
+	columns:
+			<input type="number" name="columns" /><br /> 
+			option:
+			<input type="text" name="optionc" /><br /><br />
+		</form>
+
+		<button onclick="myFunction()">Submit</button>
+
+		<div id="demo"></div>
+
+		<script src="script.js"></script>
+	</body>
+</html> 
+-->

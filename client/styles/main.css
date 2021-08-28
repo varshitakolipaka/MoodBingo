@@ -79,3 +79,20 @@ canvas {
 #events {
   height: 150px;
 }
+
+.row {
+	display: flex;
+	font-size: 1em;
+	text-align: center;
+	color: red;
+}
+.cell {
+	margin: 0.1em;
+	border: 0.1em solid black;
+  width: 15em;
+  height: 15em;
+}
+
+button{
+  background-color:lightblue;
+}
