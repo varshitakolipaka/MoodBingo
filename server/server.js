@@ -5,8 +5,8 @@ const randomColor = require('randomcolor');
 const createBoard = require('./create-board');
 const createCooldown = require('./create-cooldown');
 
-
 const app = express();
+var cardcount = {};
 
 app.use(express.static(`${__dirname}/../client`));
 user_board = [2, 4, 5];
@@ -15,17 +15,17 @@ const server = http.createServer(app);
 const io = socketio(server);
 const { clear, getBoard, makeTurn } = createBoard(20);
 function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
+	for (var i = array.length - 1; i > 0; i--) {
+		var j = Math.floor(Math.random() * (i + 1));
+		var temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
 }
 
-var TEST, number,status;
+var TEST, number, status;
 io.on('connection', (sock) => {
-	const color = randomColor();
+	// const color = randomColor();
 	const cooldown = createCooldown(2000);
 
 	// sock.on('turndone', () => io.emit('message', "number"));
@@ -37,30 +37,58 @@ io.on('connection', (sock) => {
 	//   });
 	// sock.emit('turnNo',(number));
 	// sock.on('nextTurn', (number) => io.emit('message', text));
-	sock.on('message', (text) => io.emit('message', text));
-	sock.on('submitted', () =>{
+	
+	sock.on('message', ({text, name}) => {
+		console.log('Name = ', name);
+		show_message = name + ": " + text;
+		io.emit('message', show_message);
+	})
+	sock.on('submitted', ({ row, optionc ,name}) => {
 		TEST = [...Array(9).keys()]
 		console.log(TEST)
 		shuffleArray(TEST);
-		console.log(TEST);
-		io.emit('make board');
+		if (TEST.length) {
+			number = TEST[(TEST.length) - 1];
+			TEST.pop();
+			console.log(number);
+			io.emit('nextTurnCard', number);
+		}
+		else {
+			status = "Game Over!";
+			io.emit('message', status);
+		}
+		
+		io.emit('make empty board', { row, optionc });
+		io.emit('nextTurnCard',number)
+		console.log(row);
+		console.log(optionc);
+		console.log(name);
+		joined = name + " joined.";
+		cardcount[name] = [];
+		console.log(cardcount);
+		io.emit('message', joined);
+		
 	})
-  sock.on('turnDone', () => {
-	
-	if(TEST.length){
-		number = TEST[(TEST.length) - 1];
-		TEST.pop();
-		console.log(number);
-		io.emit('nextTurnCard', number);
-	}
-	else{
-	    //   status = "Game Over!";
-		//   io.emit('message', status);	
-	}
-	
-    // var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
-    // var turnAnnoucement = "Next turn has begun! The card number is: " + number;
-    });
+	sock.on('turnDone', ({name,HighlightCardNumber}) => {
+
+		
+		joined = name + " chose this card "+ HighlightCardNumber;
+		cardcount[name].push(HighlightCardNumber);
+		console.log(cardcount);
+		if (TEST.length) {
+			number = TEST[(TEST.length) - 1];
+			TEST.pop();
+			console.log(number);
+			io.emit('nextTurnCard', number);
+		}
+		else {
+			status = "Game Over!";
+			io.emit('message', status);
+		}
+
+		// var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
+		// var turnAnnoucement = "Next turn has begun! The card number is: " + number;
+	});
 
 	// sock.on('turndone',(marked) => io.emit('message', marked));
 	sock.on('turn', ({ x, y }) => {
