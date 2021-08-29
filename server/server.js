@@ -24,9 +24,9 @@ function shuffleArray(array) {
 	}
 }
 function addAndSort(arr, val) {
-	console.log("==========================");
-	console.log(arr);
-	console.log("==========================");
+	// console.log("==========================");
+	// console.log(arr);
+	// console.log("==========================");
 	arr.push(val);
 	i = arr.length - 1;
 	item = arr[i];
@@ -58,6 +58,7 @@ const declareWinner = (array, rows) => {
 
 			if (k == rows) {
 				console.log("Game Won through rows");
+				return 0;
 			}
 		}
 	}
@@ -78,14 +79,14 @@ const declareWinner = (array, rows) => {
 		}
 		if (count == rows) {
 			console.log("game win through columns");
+			return 1;
 		}
 	}
 
 	//diagonal 1
-	
+
 	var count = 0;
-	for(var j=0; j<len; j+=1)
-	{
+	for (var j = 0; j < len; j += 1) {
 		// let smol = parseInt(rows) - 1;
 		// let prod = j * smol;
 		// let sum = 0 + parseInt(prod,10);
@@ -96,44 +97,45 @@ const declareWinner = (array, rows) => {
 		// console.log(sum);
 		// console.log(final);
 		// console.log("-----------------------");
-		if(((parseInt(arr[j],10))%(parseInt(rows,10) + 1))==0)
-		 {
-			console.log("diagonal -----------------------"); 
-			console.log(arr[j]);
+		if (((parseInt(arr[j], 10)) % (parseInt(rows, 10) + 1)) == 0) {
+			// console.log("diagonal -----------------------"); 
+			// console.log(arr[j]);
 			count++;
-		 }
+		}
 
 	}
-	if(count == rows){
+	if (count == rows) {
 		console.log("won using diagonals 1");
+		return 2;
+
 	}
-	
-	
+
+
 	//diagonal 2
 	var count2 = 0;
-	for(var j=0; j<rows; j++)
-	{
+	for (var j = 0; j < rows; j++) {
 		let smol = parseInt(rows) - 1;
 		let prod = j * smol;
-		let sum = parseInt(rows,10) + parseInt(prod,10);
+		let sum = parseInt(rows, 10) + parseInt(prod, 10);
 		let final = sum - 1;
-		console.log("-----------------------");
-		console.log(smol);
-		console.log(prod);
-		console.log(sum);
-		console.log(final);
-		console.log("-----------------------");
+		// console.log("-----------------------");
+		// console.log(smol);
+		// console.log(prod);
+		// console.log(sum);
+		// console.log(final);
+		// console.log("-----------------------");
 
-		if(arr.includes(final))
-		 {
-			 count2++;
-		 }
+		if (arr.includes(final)) {
+			count2++;
+		}
 
 	}
-	if(count2 == rows){
+	if (count2 == rows) {
 		console.log("won using diagonals 2");
-	}
+		return 3;
 
+	}
+	return 4;
 	console.log("game won, khel khatam, dukaan band");
 };
 var TEST, number, status;
@@ -184,7 +186,31 @@ io.on("connection", (sock) => {
 	sock.on("turnDone", ({ name, HighlightCardNumber }) => {
 		joined = name + " chose this card " + HighlightCardNumber;
 		addAndSort(cardcount[name], HighlightCardNumber);
-		declareWinner(cardcount[name], Norow);
+		let winstat;
+		let message = name + " won using ";
+		winstat = declareWinner(cardcount[name], Norow);
+		switch (winstat) {
+			case 0:
+				message += "rows";
+				io.emit('message', message);
+				break;
+			case 1:
+				message += "columns";
+				io.emit('message', message);
+				break;
+			case 2:
+				message += "diagonal primary";
+				io.emit('message', message);
+				break;
+			case 3:
+				message += "diagonal non-primary";
+				io.emit('message', message);
+				break;
+			// case 4:
+			// 	message = "no one won";
+			// 	io.emit('message', message);
+			// 	break;
+		}
 		// cardcount[name].push(HighlightCardNumber);
 		console.log(cardcount);
 		if (TEST.length) {
