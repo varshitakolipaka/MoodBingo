@@ -245,8 +245,3 @@ const getBoard = (canvas, numCells = 20) => {
 */
 // ---------------------------------------
 
-
-
-const declareWinner = () => {
-	console.log("game won, khel khatam, dukaan band");
-}
