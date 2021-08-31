@@ -8,6 +8,7 @@ const createCooldown = require("./create-cooldown");
 const app = express();
 var cardcount = {};
 var Norow;
+var roomIDArr = {};
 
 app.use(express.static(`${__dirname}/../client`));
 user_board = [2, 4, 5];
@@ -97,19 +98,16 @@ const declareWinner = (array, rows) => {
 		// console.log(sum);
 		// console.log(final);
 		// console.log("-----------------------");
-		if (((parseInt(arr[j], 10)) % (parseInt(rows, 10) + 1)) == 0) {
-			// console.log("diagonal -----------------------"); 
+		if (parseInt(arr[j], 10) % (parseInt(rows, 10) + 1) == 0) {
+			// console.log("diagonal -----------------------");
 			// console.log(arr[j]);
 			count++;
 		}
-
 	}
 	if (count == rows) {
 		console.log("won using diagonals 1");
 		return 2;
-
 	}
-
 
 	//diagonal 2
 	var count2 = 0;
@@ -128,52 +126,76 @@ const declareWinner = (array, rows) => {
 		if (arr.includes(final)) {
 			count2++;
 		}
-
 	}
 	if (count2 == rows) {
 		console.log("won using diagonals 2");
 		return 3;
-
 	}
 	return 4;
 	console.log("game won, khel khatam, dukaan band");
 };
 var TEST, number, status;
-io.on("connection", (sock) => {
+io.sockets.on('connection', function(sock) {
 	// const color = randomColor();
-	const cooldown = createCooldown(2000);
 
-	// sock.on('turndone', () => io.emit('message', "number"));
+	const cooldown = createCooldown(2000);
+	// sock.on('turndone', () => io.to(roomID).emit('message', "number"));
 	//   sock.on('turndone',() => {
 
 	//   makePurple();
-	//  	  io.emit('received');
-	//     io.emit('message', number);
+	//  	  io.to(roomID).emit('received');
+	//     io.to(roomID).emit('message', number);
 	//   });
 	// sock.emit('turnNo',(number));
-	// sock.on('nextTurn', (number) => io.emit('message', text));
+	// sock.on('nextTurn', (number) => io.to(roomID).emit('message', text));
 
-	sock.on("message", ({ text, name }) => {
+	sock.on('newGameCreated', (roomID) => {
+		console.log(roomID);
+		roomIDArr[roomID] = [1];
+	});
+
+	sock.on("joinRoom", function ({ roomID, name }) {
+		console.log(roomIDArr);
+		if (roomID in roomIDArr) {
+			roomIDArr[roomID].push(name);
+			sock.join(roomID);
+			console.log(roomID);
+			show_message = name + ": " + roomID;
+			io.to(roomID).emit("message", show_message);
+		} 
+		
+		else console.log("room does not exist");
+	});
+
+	sock.on("message", ({ text, name, roomID }) => {
 		console.log("Name = ", name);
 		show_message = name + ": " + text;
-		io.emit("message", show_message);
+		io.to(roomID).emit("message", show_message);
 	});
-	sock.on("submitted", ({ row, optionc, name }) => {
-		TEST = [...Array(9).keys()];
+	sock.on("add vote yes", ({ roomID, name,vote  }) => {
+		show_message = name + ": " + text;
+		io.to(roomID).emit("message", name +" voted yes!" );
+	});
+	sock.on("add vote no", ({ text, name, vote }) => {
+		show_message = name + ": " + text;
+		io.to(roomID).emit("message", name +" voted yes!" );
+	});
+	sock.on("submitted", ({ row, optionc, name, roomID }) => {
+		TEST = [...Array(row).keys()];
 		console.log(TEST);
 		shuffleArray(TEST);
 		if (TEST.length) {
 			number = TEST[TEST.length - 1];
 			TEST.pop();
 			console.log(number);
-			io.emit("nextTurnCard", number);
+			io.to(roomID).emit("nextTurnCard", number);
 		} else {
 			status = "Game Over!";
-			io.emit("message", status);
+			io.to(roomID).emit("message", status);
 		}
 
-		io.emit("make empty board", { row, optionc });
-		io.emit("nextTurnCard", number);
+		io.to(roomID).emit("make empty board", { row, optionc, roomID });
+		io.to(roomID).emit("nextTurnCard", number);
 		Norow = row;
 		console.log(row);
 		console.log(optionc);
@@ -181,9 +203,9 @@ io.on("connection", (sock) => {
 		joined = name + " joined.";
 		cardcount[name] = [];
 		console.log(cardcount);
-		io.emit("message", joined);
+		io.to(roomID).emit("message", joined);
 	});
-	sock.on("turnDone", ({ name, HighlightCardNumber }) => {
+	sock.on("turnDone", ({ name, HighlightCardNumber, roomID }) => {
 		joined = name + " chose this card " + HighlightCardNumber;
 		addAndSort(cardcount[name], HighlightCardNumber);
 		let winstat;
@@ -192,24 +214,26 @@ io.on("connection", (sock) => {
 		switch (winstat) {
 			case 0:
 				message += "rows";
-				io.emit('message', message);
+				io.to(roomID).emit("message", message);
 				break;
 			case 1:
 				message += "columns";
-				io.emit('message', message);
+				io.to(roomID).emit("message", message);
 				break;
 			case 2:
 				message += "diagonal primary";
-				io.emit('message', message);
+				io.to(roomID).emit("message", message);
 				break;
 			case 3:
 				message += "diagonal non-primary";
-				io.emit('message', message);
+				io.to(roomID).emit("message", message);
 				break;
+			default:
 			// case 4:
 			// 	message = "no one won";
-			// 	io.emit('message', message);
+			// 	io.to(roomID).emit('message', message);
 			// 	break;
+			io.to(roomID).emit("begin voting")
 		}
 		// cardcount[name].push(HighlightCardNumber);
 		console.log(cardcount);
@@ -217,27 +241,27 @@ io.on("connection", (sock) => {
 			number = TEST[TEST.length - 1];
 			TEST.pop();
 			console.log(number);
-			io.emit("nextTurnCard", number);
+			io.to(roomID).emit("nextTurnCard", number);
 		} else {
 			status = "Game Over!";
-			io.emit("message", status);
+			io.to(roomID).emit("message", status);
 		}
 
 		// var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
 		// var turnAnnoucement = "Next turn has begun! The card number is: " + number;
 	});
 
-	// sock.on('turndone',(marked) => io.emit('message', marked));
-	sock.on("turn", ({ x, y }) => {
+	// sock.on('turndone',(marked) => io.to(roomID).emit('message', marked));
+	sock.on("turn", ({ x, y, roomID }) => {
 		if (cooldown()) {
 			const playerWon = makeTurn(x, y, color);
-			io.emit("turn", { x, y, color });
+			io.to(roomID).emit("turn", { x, y, color });
 
 			if (playerWon) {
 				sock.emit("message", "You Won!");
-				io.emit("message", "New Round");
+				io.to(roomID).emit("message", "New Round");
 				clear();
-				io.emit("board");
+				io.to(roomID).emit("board");
 			}
 		}
 	});
