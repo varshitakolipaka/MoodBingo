@@ -174,11 +174,11 @@ io.sockets.on('connection', function(sock) {
 	});
 	sock.on("add vote yes", ({ roomID, name,vote  }) => {
 		show_message = name + ": " + text;
-		io.to(roomID).emit("message", name +" voted yes!" );
+		io.to(roomID).emit("message", name +" voted " );
 	});
 	sock.on("add vote no", ({ text, name, vote }) => {
 		show_message = name + ": " + text;
-		io.to(roomID).emit("message", name +" voted yes!" );
+		io.to(roomID).emit("message", show_message);
 	});
 	sock.on("submitted", ({ row, optionc, name, roomID }) => {
 		TEST = [...Array(row).keys()];

@@ -12,15 +12,16 @@
 	<canvas height="0" width="0"></canvas>
 	<div class="controls-wrapper">
 		<ul id="events"></ul>
+
 		<div class="controls">
-			<div class="chat-wrapper">
-				<form id="chat-form">
-					<input id="chat" autocomplete="off" title="chat" />
-					<button id="say">Say</button>
-				</form>
+			<div class="controls">
+				<div class="chat-wrapper">
+					<form id="chat-form">
+						<input id="chat" autocomplete="off" title="chat" />
+						<button id="say">Say</button>
+					</form>
+				</div>
 			</div>
-		</div>
-		<div class="controls">
 			<div class="chat-wrapper">
 				<form id="turn-form">
 					<button id="turnbtn">Turn Complete</button>
@@ -36,11 +37,39 @@
 			<input type="text" name="name" required /><br /><br />
 		</form>
 
-		<button onclick="myFunction()">Submit</button>
+		<div id="join-create">
 
-		<div id="demo">
+			<button type="button" onClick="createRoom()">CREATE</button>
+
+
+			<div id="demo">
+
+
+			</div>
+			<div id="join-div">
+				<form id="join-form">
+					ROOM ID:
+					<input type="text" name="room_nr" required /><br /><br />
+					<button type="button" onClick="joinRoom()">JOIN</button>
+				</form>
+			</div>
+			<div id="create-div">
+
+			</div>
+			<button onclick="myFunction()">Submit</button>
 
 		</div>
+
+
+	</div>
+
+
+	<div id="demo">
+
+	</div>
+	<div id="voting">
+		<button type="button" onClick="addVote=()">YES</button>
+		<button type="button" onClick="joinVoteNo()">NO</button>
 	</div>
 
 	<script src=" /socket.io/socket.io.js"></script>

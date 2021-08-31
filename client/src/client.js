@@ -1,4 +1,9 @@
+// const { on } = require("node:stream");
+
 const sock = io();
+var x = document.getElementById("frm1");
+var name = x.elements[2].value;
+var roomID;
 var options = [
 	{
 		name: "school",
@@ -20,14 +25,6 @@ var options = [
 	},
 ];
 
-// cardcount{
-// 	{
-// 		person: freyam;
-// 		cards{
-// 			1,2,3
-// 		}
-// 	}
-// }
 function myFunction() {
 	var x = document.getElementById("frm1");
 	var row = x.elements[0].value;
@@ -37,7 +34,7 @@ function myFunction() {
 	if (optionc == "") {
 		optionc = "school"
 	}
-	sock.emit('submitted', { row, optionc,name });
+	sock.emit('submitted', { row, optionc, name, roomID});
 }
 function renderEmptyBoard(row, optionc) {
 
@@ -109,10 +106,8 @@ const getNextCard = (number) => {
 	var text = "This round the card is: " + dict["cards"][number]
 	el.innerHTML = text;
 	numbertext = toString(number);
-	if(HighlightCardNumber != -1)
-	{document.getElementById(HighlightCardNumber).style.backgroundColor = "purple";}
-	if(HighlightCardNumber != -1 && HighlightCardNumber == TurnCardNumber)
-	{document.getElementById(TurnCardNumber).style.backgroundColor = "pink";}
+	if (HighlightCardNumber != -1) { document.getElementById(HighlightCardNumber).style.backgroundColor = "purple"; }
+	if (HighlightCardNumber != -1 && HighlightCardNumber == TurnCardNumber) { document.getElementById(TurnCardNumber).style.backgroundColor = "pink"; }
 	document.getElementById(number).style.backgroundColor = "yellow";
 	parent.appendChild(el);
 	parent.scrollTop = parent.scrollHeight;
@@ -121,25 +116,25 @@ const getNextCard = (number) => {
 
 const onChatSubmitted = (sock) => (e) => {
 	e.preventDefault();
-  var x = document.getElementById("frm1");
+	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
-	
+
 	const input = document.querySelector('#chat');
 	const text = input.value;
 	input.value = '';
-	sock.emit('message', {text,name});
+	sock.emit('message', { text, name, roomID });
 };
 
 const onTurnDone = (sock) => (e) => {
 	e.preventDefault();
-    var x = document.getElementById("frm1");
-	
+	var x = document.getElementById("frm1");
+
 	var name = x.elements[2].value;
 	TurnCardNumber = HighlightCardNumber;
 	console.log(HighlightCardNumber);
 	document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
-	sock.emit('turnDone',{name,HighlightCardNumber});
-	
+	sock.emit('turnDone', { name, HighlightCardNumber, roomID });
+
 };
 
 const getClickCoordinates = (element, ev) => {
@@ -150,7 +145,7 @@ const getClickCoordinates = (element, ev) => {
 		x: clientX - left,
 		y: clientY - top
 	};
-	
+
 };
 
 const getBoard = (canvas, numCells = 20) => {
@@ -245,3 +240,37 @@ const getBoard = (canvas, numCells = 20) => {
 */
 // ---------------------------------------
 
+function createRoom(){
+	var val = Math.floor(1000 + Math.random() * 9000);
+	// console.log(val);
+	//append to the div this random val
+	document.getElementById('create-div').innerHTML = "room no: " + val;
+
+	sock.emit('newGameCreated', val);
+	// sock.emit('create room',{val});
+}
+
+function joinRoom(){
+	//append to the div this random val
+	var x = document.getElementById("join-form");
+    roomID = x.elements[0].value; // get room-id
+	console.log(roomID);
+	sock.emit('joinRoom', {roomID, name});
+	// sock.emit('create room',{val});
+}
+
+// SocketID: uer will havr to enter this server.kjs, roomID: [awfwesgwrsgh,wseDGrsg]
+// join: 
+// 5678, SocketID: roomID; [(3456,1iskghfnkajsdg)(3257, osildhgfnwk)()]
+// sock.on('begin voting', function(){
+// 	document.getElementById("voting").innerHTML = " ";
+	
+// });
+// function addVoteYes(){
+// 	var vote = 1;
+// 	sock.emit('add vote yes', {roomID, name, vote});
+// }
+// function addVoteNo(){
+// 	var vote = 0;
+// 	sock.emit('add vote no', {roomID, name, vote});
+// }
