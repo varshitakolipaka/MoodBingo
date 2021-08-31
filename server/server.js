@@ -132,7 +132,6 @@ const declareWinner = (array, rows) => {
 		return 3;
 	}
 	return 4;
-	console.log("game won, khel khatam, dukaan band");
 };
 var TEST, number, status;
 io.sockets.on('connection', function(sock) {
@@ -148,16 +147,18 @@ io.sockets.on('connection', function(sock) {
 	//   });
 	// sock.emit('turnNo',(number));
 	// sock.on('nextTurn', (number) => io.to(roomID).emit('message', text));
-
 	sock.on('newGameCreated', (roomID) => {
 		console.log(roomID);
-		roomIDArr[roomID] = [1];
+		roomIDArr[roomID] = {};
+		(roomIDArr[roomID])["members"] = [];
+		(roomIDArr[roomID])["yes_votes"] = 0;
+		(roomIDArr[roomID])["total_votes"] = 0;
 	});
 
 	sock.on("joinRoom", function ({ roomID, name }) {
 		console.log(roomIDArr);
 		if (roomID in roomIDArr) {
-			roomIDArr[roomID].push(name);
+			roomIDArr[roomID]["members"].push(name);
 			sock.join(roomID);
 			console.log(roomID);
 			show_message = name + ": " + roomID;
@@ -168,21 +169,22 @@ io.sockets.on('connection', function(sock) {
 	});
 
 	sock.on("message", ({ text, name, roomID }) => {
-		console.log("Name = ", name);
 		show_message = name + ": " + text;
 		io.to(roomID).emit("message", show_message);
 	});
 	sock.on("add vote yes", ({ roomID, name,vote  }) => {
-		show_message = name + ": " + text;
-		io.to(roomID).emit("message", name +" voted " );
+		show_message = name + " voted yes.";
+		io.to(roomID).emit("message", show_message );
 	});
-	sock.on("add vote no", ({ text, name, vote }) => {
-		show_message = name + ": " + text;
-		io.to(roomID).emit("message", show_message);
+	sock.on("add vote no", ({ roomID, name, vote }) => {
+		show_message = name + " voted no.";
+		io.to(roomID).emit("message", show_message );
 	});
 	sock.on("submitted", ({ row, optionc, name, roomID }) => {
-		TEST = [...Array(row).keys()];
-		console.log(TEST);
+		row = parseInt(row, 10);
+		TEST = [...Array(row * row).keys()];
+		console.log(row);
+		console.log("ARRAY IS:" + TEST);
 		shuffleArray(TEST);
 		if (TEST.length) {
 			number = TEST[TEST.length - 1];

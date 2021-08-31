@@ -253,24 +253,35 @@ function createRoom(){
 function joinRoom(){
 	//append to the div this random val
 	var x = document.getElementById("join-form");
+	var y = document.getElementById("frm1");
+	var name = y.elements[2].value;
     roomID = x.elements[0].value; // get room-id
 	console.log(roomID);
 	sock.emit('joinRoom', {roomID, name});
 	// sock.emit('create room',{val});
 }
 
-// SocketID: uer will havr to enter this server.kjs, roomID: [awfwesgwrsgh,wseDGrsg]
+// SocketID: uer will havr to enter this server.js, roomID: [awfwesgwrsgh,wseDGrsg]
 // join: 
 // 5678, SocketID: roomID; [(3456,1iskghfnkajsdg)(3257, osildhgfnwk)()]
 // sock.on('begin voting', function(){
-// 	document.getElementById("voting").innerHTML = " ";
+// document.getElementById("voting").innerHTML = " ";
 	
 // });
-// function addVoteYes(){
-// 	var vote = 1;
-// 	sock.emit('add vote yes', {roomID, name, vote});
-// }
-// function addVoteNo(){
-// 	var vote = 0;
-// 	sock.emit('add vote no', {roomID, name, vote});
-// }
+function addVoteYes(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	var vote = 1;
+	sock.emit('add vote yes', {roomID, name, vote});
+}
+function addVoteNo(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	var vote = 0;
+	sock.emit('add vote no', {roomID, name, vote});
+}
+function beginVoting(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	sock.emit('begin voting',{roomID})
+}
