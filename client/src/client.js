@@ -4,6 +4,7 @@ const sock = io();
 var x = document.getElementById("frm1");
 var name = x.elements[2].value;
 var roomID;
+var dict = {};
 var options = [
 	{
 		name: "school",
@@ -58,6 +59,14 @@ function renderEmptyBoard(row, optionc) {
 		s += "</div>";
 	}
 	document.getElementById("demo").innerHTML = s;
+
+	// btns = 
+	// `<button type="button" onClick="beginVoting();">BEGIN VOTING</button>
+	// <button id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
+	// <button id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
+
+	// document.getElementById("voting").innerHTML = btns;
+	
 }
 
 var HighlightCardNumber = -1;
@@ -89,6 +98,65 @@ var TurnCardNumber = -1;
 //     marked = -1;
 //   }
 // };
+function createRoom(){
+	var val = Math.floor(1000 + Math.random() * 9000);
+	// console.log(val);
+	//append to the div this random val
+	document.getElementById('create-div').innerHTML = "room no: " + val;
+
+	sock.emit('newGameCreated', val);
+	// sock.emit('create room',{val});
+}
+
+function joinRoom(){
+	//append to the div this random val
+	var x = document.getElementById("join-form");
+	var y = document.getElementById("frm1");
+	var name = y.elements[2].value;
+    roomID = x.elements[0].value; // get room-id
+	console.log(roomID);
+	sock.emit('joinRoom', {roomID, name});
+	// sock.emit('create room',{val});
+}
+
+// SocketID: uer will havr to enter this server.js, roomID: [awfwesgwrsgh,wseDGrsg]
+// join: 
+// 5678, SocketID: roomID; [(3456,1iskghfnkajsdg)(3257, osildhgfnwk)()]
+// sock.on('begin voting', function(){
+// document.getElementById("voting").innerHTML = " ";
+	
+// });
+function addVoteYes(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	var vote = 1;
+	sock.emit('add vote yes', {roomID, name, vote});
+}
+function addVoteNo(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	var vote = 0;
+	sock.emit('add vote no', {roomID, name, vote});
+}
+function beginVoting(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	document.getElementById("btnYes").style.display = "inline-block";
+	document.getElementById("btnNo").style.display = "inline-block";
+}
+
+function appendVoting(){
+	console.log("hiee")
+	document.getElementById("btnYes").style.display = "inline-block";
+	document.getElementById("btnNo").style.display = "inline-block";
+
+}
+
+function disableVoting(){
+	document.getElementById("btnYes").style.display = "none";
+	document.getElementById("btnNo").style.display = "none";
+
+}
 
 const log = (text) => {
 	const parent = document.querySelector('#events');
@@ -133,7 +201,9 @@ const onTurnDone = (sock) => (e) => {
 	TurnCardNumber = HighlightCardNumber;
 	console.log(HighlightCardNumber);
 	document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
+	disableVoting();
 	sock.emit('turnDone', { name, HighlightCardNumber, roomID });
+
 
 };
 
@@ -219,6 +289,7 @@ const getBoard = (canvas, numCells = 20) => {
 	sock.on('board', reset);
 	sock.on('message', log);
 	sock.on('nextTurnCard', getNextCard);
+	sock.on('append voting', appendVoting());
 	sock.on('turn', ({ x, y, color }) => fillCell(x, y, color));
 	sock.on('make empty board', ({ row, optionc }) => renderEmptyBoard(row, optionc));
 	sock.on('turnNo', (number) => getNumber(number));
@@ -240,48 +311,3 @@ const getBoard = (canvas, numCells = 20) => {
 */
 // ---------------------------------------
 
-function createRoom(){
-	var val = Math.floor(1000 + Math.random() * 9000);
-	// console.log(val);
-	//append to the div this random val
-	document.getElementById('create-div').innerHTML = "room no: " + val;
-
-	sock.emit('newGameCreated', val);
-	// sock.emit('create room',{val});
-}
-
-function joinRoom(){
-	//append to the div this random val
-	var x = document.getElementById("join-form");
-	var y = document.getElementById("frm1");
-	var name = y.elements[2].value;
-    roomID = x.elements[0].value; // get room-id
-	console.log(roomID);
-	sock.emit('joinRoom', {roomID, name});
-	// sock.emit('create room',{val});
-}
-
-// SocketID: uer will havr to enter this server.js, roomID: [awfwesgwrsgh,wseDGrsg]
-// join: 
-// 5678, SocketID: roomID; [(3456,1iskghfnkajsdg)(3257, osildhgfnwk)()]
-// sock.on('begin voting', function(){
-// document.getElementById("voting").innerHTML = " ";
-	
-// });
-function addVoteYes(){
-	var x = document.getElementById("frm1");
-	var name = x.elements[2].value;
-	var vote = 1;
-	sock.emit('add vote yes', {roomID, name, vote});
-}
-function addVoteNo(){
-	var x = document.getElementById("frm1");
-	var name = x.elements[2].value;
-	var vote = 0;
-	sock.emit('add vote no', {roomID, name, vote});
-}
-function beginVoting(){
-	var x = document.getElementById("frm1");
-	var name = x.elements[2].value;
-	sock.emit('begin voting',{roomID})
-}

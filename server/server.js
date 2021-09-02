@@ -9,6 +9,7 @@ const app = express();
 var cardcount = {};
 var Norow;
 var roomIDArr = {};
+var TEST, number, status;
 
 app.use(express.static(`${__dirname}/../client`));
 user_board = [2, 4, 5];
@@ -16,6 +17,8 @@ user_board = [2, 4, 5];
 const server = http.createServer(app);
 const io = socketio(server);
 const { clear, getBoard, makeTurn } = createBoard(20);
+
+
 function shuffleArray(array) {
 	for (var i = array.length - 1; i > 0; i--) {
 		var j = Math.floor(Math.random() * (i + 1));
@@ -24,10 +27,9 @@ function shuffleArray(array) {
 		array[j] = temp;
 	}
 }
+
+
 function addAndSort(arr, val) {
-	// console.log("==========================");
-	// console.log(arr);
-	// console.log("==========================");
 	arr.push(val);
 	i = arr.length - 1;
 	item = arr[i];
@@ -38,13 +40,15 @@ function addAndSort(arr, val) {
 	arr[i] = item;
 	return arr;
 }
+
+
 var isSquare = function (n) {
 	return Math.sqrt(n) % 1 === 0;
 };
 
+
 const declareWinner = (array, rows) => {
-	// var x = document.getElementById("frm1");
-	// var rows = x.elements[0].value;
+
 	//rows
 	var arr = array;
 
@@ -67,13 +71,13 @@ const declareWinner = (array, rows) => {
 	//column
 
 	var len = arr.length;
-	//check for all remainders, could range from 0 to {rows-1}
+	
 	for (var rem = 0; rem < rows; rem += 1) {
-		//check if numbers are of the series 1,4,7 or 2,5,8...
+		
 		var count = 0;
-		//check for all indices
+
 		for (var j = 0; j < len; j += 1) {
-			//numbers are 0 indexed, so add 1, to make 1 based, and check remainded is same
+			
 			if ((arr[j] + 1) % rows == rem) {
 				count++;
 			}
@@ -88,19 +92,9 @@ const declareWinner = (array, rows) => {
 
 	var count = 0;
 	for (var j = 0; j < len; j += 1) {
-		// let smol = parseInt(rows) - 1;
-		// let prod = j * smol;
-		// let sum = 0 + parseInt(prod,10);
-		// let final = sum;
-		// console.log("-----------------------");
-		// console.log(smol);
-		// console.log(prod);
-		// console.log(sum);
-		// console.log(final);
-		// console.log("-----------------------");
+
 		if (parseInt(arr[j], 10) % (parseInt(rows, 10) + 1) == 0) {
-			// console.log("diagonal -----------------------");
-			// console.log(arr[j]);
+
 			count++;
 		}
 	}
@@ -116,12 +110,6 @@ const declareWinner = (array, rows) => {
 		let prod = j * smol;
 		let sum = parseInt(rows, 10) + parseInt(prod, 10);
 		let final = sum - 1;
-		// console.log("-----------------------");
-		// console.log(smol);
-		// console.log(prod);
-		// console.log(sum);
-		// console.log(final);
-		// console.log("-----------------------");
 
 		if (arr.includes(final)) {
 			count2++;
@@ -133,20 +121,28 @@ const declareWinner = (array, rows) => {
 	}
 	return 4;
 };
-var TEST, number, status;
-io.sockets.on('connection', function(sock) {
-	// const color = randomColor();
+
+
+function modifyVotes(vote, roomID) {
+	vote = parseInt(vote, 10);
+	roomIDArr[roomID]["yes_votes"] += vote;
+	roomIDArr[roomID]["total_votes"] += 1;
+
+}
+
+
+function initVotes(roomID) {
+	roomIDArr[roomID]["yes_votes"] = 0;
+	roomIDArr[roomID]["total_votes"] = 0;
+	message = "Voting round has begun! :)"
+	io.to(roomID).emit("message", message);
+}
+
+
+io.sockets.on('connection', function (sock) {
 
 	const cooldown = createCooldown(2000);
-	// sock.on('turndone', () => io.to(roomID).emit('message', "number"));
-	//   sock.on('turndone',() => {
 
-	//   makePurple();
-	//  	  io.to(roomID).emit('received');
-	//     io.to(roomID).emit('message', number);
-	//   });
-	// sock.emit('turnNo',(number));
-	// sock.on('nextTurn', (number) => io.to(roomID).emit('message', text));
 	sock.on('newGameCreated', (roomID) => {
 		console.log(roomID);
 		roomIDArr[roomID] = {};
@@ -163,8 +159,8 @@ io.sockets.on('connection', function(sock) {
 			console.log(roomID);
 			show_message = name + ": " + roomID;
 			io.to(roomID).emit("message", show_message);
-		} 
-		
+		}
+
 		else console.log("room does not exist");
 	});
 
@@ -172,14 +168,27 @@ io.sockets.on('connection', function(sock) {
 		show_message = name + ": " + text;
 		io.to(roomID).emit("message", show_message);
 	});
-	sock.on("add vote yes", ({ roomID, name,vote  }) => {
+	// sock.emit('begin voting',{roomID})
+
+	sock.on("add vote yes", ({ roomID, name, vote }) => {
 		show_message = name + " voted yes.";
-		io.to(roomID).emit("message", show_message );
+		console.log(vote);
+		io.to(roomID).emit("message", show_message);
+		modifyVotes(vote,roomID);
+
 	});
+
 	sock.on("add vote no", ({ roomID, name, vote }) => {
 		show_message = name + " voted no.";
-		io.to(roomID).emit("message", show_message );
+		console.log(vote);
+		io.to(roomID).emit("message", show_message);
+		modifyVotes(vote,roomID);
 	});
+
+	sock.on("begin voting", ({ roomID}) => {
+		initVotes(roomID);
+	});
+
 	sock.on("submitted", ({ row, optionc, name, roomID }) => {
 		row = parseInt(row, 10);
 		TEST = [...Array(row * row).keys()];
@@ -207,6 +216,7 @@ io.sockets.on('connection', function(sock) {
 		console.log(cardcount);
 		io.to(roomID).emit("message", joined);
 	});
+
 	sock.on("turnDone", ({ name, HighlightCardNumber, roomID }) => {
 		joined = name + " chose this card " + HighlightCardNumber;
 		addAndSort(cardcount[name], HighlightCardNumber);
@@ -231,13 +241,9 @@ io.sockets.on('connection', function(sock) {
 				io.to(roomID).emit("message", message);
 				break;
 			default:
-			// case 4:
-			// 	message = "no one won";
-			// 	io.to(roomID).emit('message', message);
-			// 	break;
-			io.to(roomID).emit("begin voting")
+			// io.to(roomID).emit("begin voting")
 		}
-		// cardcount[name].push(HighlightCardNumber);
+
 		console.log(cardcount);
 		if (TEST.length) {
 			number = TEST[TEST.length - 1];
@@ -249,11 +255,9 @@ io.sockets.on('connection', function(sock) {
 			io.to(roomID).emit("message", status);
 		}
 
-		// var number = Math.floor(Math.random() * (8 - 0 + 1) + 0);
-		// var turnAnnoucement = "Next turn has begun! The card number is: " + number;
+
 	});
 
-	// sock.on('turndone',(marked) => io.to(roomID).emit('message', marked));
 	sock.on("turn", ({ x, y, roomID }) => {
 		if (cooldown()) {
 			const playerWon = makeTurn(x, y, color);
@@ -269,6 +273,7 @@ io.sockets.on('connection', function(sock) {
 	});
 });
 
+
 server.on("error", (err) => {
 	console.error(err);
 });
@@ -276,17 +281,6 @@ server.on("error", (err) => {
 server.listen(8080, () => {
 	console.log("server is ready");
 });
-
-// const box = {
-//     id: "id",
-//     boolticked: "Doe",
-//   whoallticked: [,,,,,,],
-// };
-// div id = eachBox
-// text = "i ahev gone to jail"
-
-// if boolticked == yes:
-// eachBox.style.color = "green"
 
 var options = [
 	{
@@ -309,8 +303,3 @@ var options = [
 	},
 ];
 
-// $(document).ready(function () {
-// 	$(".cell").click(function () {
-// 		$(this).addClass("vistedCell");
-// 	});
-// });
