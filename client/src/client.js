@@ -3,8 +3,10 @@
 const sock = io();
 var x = document.getElementById("frm1");
 var name = x.elements[2].value;
-var roomID;
-var dict = {};
+let roomID;
+let dict = {};
+let HighlightCardNumber = -1;
+let TurnCardNumber = -1;
 var options = [
 	{
 		name: "school",
@@ -37,8 +39,12 @@ function myFunction() {
 	}
 	sock.emit('submitted', { row, optionc, name, roomID});
 }
-function renderEmptyBoard(row, optionc) {
 
+
+
+
+function renderEmptyBoard(row, optionc) {
+	console.log("k");
 	var text = "";
 	var i = -1;
 	var s = "";
@@ -60,17 +66,21 @@ function renderEmptyBoard(row, optionc) {
 	}
 	document.getElementById("demo").innerHTML = s;
 
-	// btns = 
-	// `<button type="button" onClick="beginVoting();">BEGIN VOTING</button>
-	// <button id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
-	// <button id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
+	btns = 
+	`<button onclick="Turn()">Turn Complete</button>
+	 <button id="handbtn" onclick="raiseHand()">Raise Hand</button>
+	 <button id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
+	 <button id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
 
-	// document.getElementById("voting").innerHTML = btns;
+	document.getElementById("voting").innerHTML = btns;
+	document.getElementById("startbtn").style.display = "none";
+	document.getElementById("joinbtn").style.display = "none";
+	document.getElementById("join-form").style.display = "none";
+	document.getElementById('create-div').style.display = "none"
 	
 }
 
-var HighlightCardNumber = -1;
-var TurnCardNumber = -1;
+
 // function getNumber(number) {
 //   console.log(number);
 //   HighlightCardNumber = number;
@@ -143,6 +153,7 @@ function beginVoting(){
 	var name = x.elements[2].value;
 	document.getElementById("btnYes").style.display = "inline-block";
 	document.getElementById("btnNo").style.display = "inline-block";
+	sock.emit('begin voting',{roomID});
 }
 
 function appendVoting(){
@@ -158,6 +169,20 @@ function disableVoting(){
 
 }
 
+function Turn(){
+
+	// onTurnDone(sock);
+	var x = document.getElementById("frm1");
+
+	var name = x.elements[2].value;
+	TurnCardNumber = HighlightCardNumber;
+	console.log(HighlightCardNumber);
+	document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
+	disableVoting();
+	sock.emit('turnDone', { name, HighlightCardNumber, roomID });
+	return false;
+}
+
 const log = (text) => {
 	const parent = document.querySelector('#events');
 	const el = document.createElement('li');
@@ -171,6 +196,7 @@ const log = (text) => {
 const getNextCard = (number) => {
 	const parent = document.querySelector('#events');
 	const el = document.createElement('li');
+	console.log(dict);
 	var text = "This round the card is: " + dict["cards"][number]
 	el.innerHTML = text;
 	numbertext = toString(number);
@@ -180,6 +206,7 @@ const getNextCard = (number) => {
 	parent.appendChild(el);
 	parent.scrollTop = parent.scrollHeight;
 	HighlightCardNumber = number;
+	return false;
 };
 
 const onChatSubmitted = (sock) => (e) => {
@@ -195,6 +222,7 @@ const onChatSubmitted = (sock) => (e) => {
 
 const onTurnDone = (sock) => (e) => {
 	e.preventDefault();
+	console.log("here => 1")
 	var x = document.getElementById("frm1");
 
 	var name = x.elements[2].value;
@@ -203,9 +231,23 @@ const onTurnDone = (sock) => (e) => {
 	document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
 	disableVoting();
 	sock.emit('turnDone', { name, HighlightCardNumber, roomID });
-
-
+	return false;
 };
+
+function raiseHand()
+{
+	document.getElementById(HighlightCardNumber).style.backgroundColor = "orange";
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+
+
+	const text = "Raised hands!" ;
+
+	sock.emit('message', { text, name, roomID });
+	beginVoting();
+
+}
+
 
 const getClickCoordinates = (element, ev) => {
 	const { top, left } = element.getBoundingClientRect();
@@ -272,6 +314,22 @@ const getBoard = (canvas, numCells = 20) => {
 	return { fillCell, reset, getCellCoordinates };
 };
 
+const memberMsg = (roomDetails) => {
+	const parent = document.querySelector('#memdiv');
+	parent.innerHTML = "Members Currently:"
+	for(var i=0 ; i<roomDetails.length ; i++)
+	{
+		const el = document.createElement('li');
+		el.innerHTML = roomDetails[i];
+		parent.appendChild(el);
+	}
+	
+
+	
+	// parent.scrollTop = parent.scrollHeight;
+};
+
+
 (() => {
 
 	const canvas = document.querySelector('canvas');
@@ -285,17 +343,20 @@ const getBoard = (canvas, numCells = 20) => {
 	};
 
 
-
+	sock.on('make empty board', ({ row, optionc, roomID }) => renderEmptyBoard(row, optionc));
+	sock.on('mem', memberMsg);
+	sock.on('nextTurnCard', getNextCard);
 	sock.on('board', reset);
 	sock.on('message', log);
-	sock.on('nextTurnCard', getNextCard);
+
 	sock.on('append voting', appendVoting());
+	// sock.on('mem', members);
 	sock.on('turn', ({ x, y, color }) => fillCell(x, y, color));
-	sock.on('make empty board', ({ row, optionc }) => renderEmptyBoard(row, optionc));
+
 	sock.on('turnNo', (number) => getNumber(number));
 	document.querySelector('#chat-form').addEventListener('submit', onChatSubmitted(sock));
-	document.querySelector('#turn-form').addEventListener('submit', onTurnDone(sock));
-	document.querySelector('#turn-form').addEventListener('submit', getNextCard);
+	// document.querySelector('#turn-form').addEventListener('submit', onTurnDone(sock));
+	// document.querySelector('#turn-form').addEventListener('submit', getNextCard);
 	// document.querySelector('#turnbtn').addEventListenser('click', turndone(sock));
 	canvas.addEventListener('click', onClick);
 

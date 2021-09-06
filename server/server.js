@@ -149,19 +149,26 @@ io.sockets.on('connection', function (sock) {
 		(roomIDArr[roomID])["members"] = [];
 		(roomIDArr[roomID])["yes_votes"] = 0;
 		(roomIDArr[roomID])["total_votes"] = 0;
+		(roomIDArr[roomID])["join"] = 1;
 	});
 
 	sock.on("joinRoom", function ({ roomID, name }) {
 		console.log(roomIDArr);
-		if (roomID in roomIDArr) {
+		if (roomIDArr[roomID]["join"] == 1) {
 			roomIDArr[roomID]["members"].push(name);
 			sock.join(roomID);
 			console.log(roomID);
-			show_message = name + ": " + roomID;
+			roomDetails = roomIDArr[roomID]["members"];
+			console.log(roomDetails);
+			show_message = "Hi " + name + "! Welcome to room: " + roomID;
+			io.to(roomID).emit('mem', roomDetails);
 			io.to(roomID).emit("message", show_message);
 		}
 
-		else console.log("room does not exist");
+		else {
+			console.log("room closed or does not exist! Please type again!");
+			// io.to(roomID).emit("message", show_message);
+		}
 	});
 
 	sock.on("message", ({ text, name, roomID }) => {
@@ -185,11 +192,12 @@ io.sockets.on('connection', function (sock) {
 		modifyVotes(vote,roomID);
 	});
 
-	sock.on("begin voting", ({ roomID}) => {
+	sock.on("begin voting", ({roomID}) => {
 		initVotes(roomID);
 	});
 
 	sock.on("submitted", ({ row, optionc, name, roomID }) => {
+		roomIDArr[roomID]["join"] = 0;
 		row = parseInt(row, 10);
 		TEST = [...Array(row * row).keys()];
 		console.log(row);
@@ -218,8 +226,11 @@ io.sockets.on('connection', function (sock) {
 	});
 
 	sock.on("turnDone", ({ name, HighlightCardNumber, roomID }) => {
+		console.log("here => 2");
+		
 		joined = name + " chose this card " + HighlightCardNumber;
 		addAndSort(cardcount[name], HighlightCardNumber);
+		
 		let winstat;
 		let message = name + " won using ";
 		winstat = declareWinner(cardcount[name], Norow);
@@ -244,6 +255,7 @@ io.sockets.on('connection', function (sock) {
 			// io.to(roomID).emit("begin voting")
 		}
 
+		
 		console.log(cardcount);
 		if (TEST.length) {
 			number = TEST[TEST.length - 1];
