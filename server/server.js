@@ -80,6 +80,8 @@ const declareWinner = (array, rows) => {
 			
 			if ((arr[j] + 1) % rows == rem) {
 				count++;
+				console.log("inside column");
+				console.log(arr[j]);
 			}
 		}
 		if (count == rows) {

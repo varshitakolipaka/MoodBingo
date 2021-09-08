@@ -78,6 +78,7 @@ function renderEmptyBoard(row, optionc) {
 	document.getElementById("join-form").style.display = "none";
 	document.getElementById('create-div').style.display = "none";
 	
+	
 }
 
 
@@ -112,7 +113,7 @@ function createRoom(){
 	var val = Math.floor(1000 + Math.random() * 9000);
 	// console.log(val);
 	//append to the div this random val
-	document.getElementById('create-div').innerHTML = "room no: " + val;
+	document.getElementById('create-div').innerHTML = "Here's Your Room: " + val + "<br>Send the link to your friends and enjoy! :)"
 
 	sock.emit('newGameCreated', val);
 	// sock.emit('create room',{val});
@@ -126,7 +127,8 @@ function joinRoom(){
     roomID = x.elements[0].value; // get room-id
 	console.log(roomID);
 	sock.emit('joinRoom', {roomID, name});
-	document.getElementById('msgbox').style.display = "block";
+	document.getElementById('msgbox').style.display = "inline-block";
+	document.getElementById('frm1').style.display = "none";
 	// sock.emit('create room',{val});
 }
 
