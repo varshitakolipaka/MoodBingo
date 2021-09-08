@@ -52,9 +52,11 @@ canvas {
 
 .controls-wrapper {
   background-color: rgb(255, 255, 255);
-  width: 400px;
-  margin: 20px auto;
-  border: 1px solid lightgrey;
+  /* width: 400px; */
+  margin: 2%;
+  width: auto;
+  /* margin: 20px auto; */
+  /* border: 1px solid lightgrey; */
 }
 
 .chat-wrapper {

@@ -154,7 +154,7 @@ io.sockets.on('connection', function (sock) {
 
 	sock.on("joinRoom", function ({ roomID, name }) {
 		console.log(roomIDArr);
-		if (roomIDArr[roomID]["join"] == 1) {
+		if (roomID in roomIDArr && roomIDArr[roomID]["join"] == 1) {
 			roomIDArr[roomID]["members"].push(name);
 			sock.join(roomID);
 			console.log(roomID);
@@ -197,6 +197,8 @@ io.sockets.on('connection', function (sock) {
 	});
 
 	sock.on("submitted", ({ row, optionc, name, roomID }) => {
+	if(roomID in roomIDArr){
+
 		roomIDArr[roomID]["join"] = 0;
 		row = parseInt(row, 10);
 		TEST = [...Array(row * row).keys()];
@@ -223,7 +225,11 @@ io.sockets.on('connection', function (sock) {
 		cardcount[name] = [];
 		console.log(cardcount);
 		io.to(roomID).emit("message", joined);
-	});
+	}
+	else{
+		console.log("no room exists!");
+	}}
+	);
 
 	sock.on("turnDone", ({ name, HighlightCardNumber, roomID }) => {
 		console.log("here => 2");

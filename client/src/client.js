@@ -76,7 +76,7 @@ function renderEmptyBoard(row, optionc) {
 	document.getElementById("startbtn").style.display = "none";
 	document.getElementById("joinbtn").style.display = "none";
 	document.getElementById("join-form").style.display = "none";
-	document.getElementById('create-div').style.display = "none"
+	document.getElementById('create-div').style.display = "none";
 	
 }
 
@@ -126,6 +126,7 @@ function joinRoom(){
     roomID = x.elements[0].value; // get room-id
 	console.log(roomID);
 	sock.emit('joinRoom', {roomID, name});
+	document.getElementById('msgbox').style.display = "block";
 	// sock.emit('create room',{val});
 }
 
@@ -208,7 +209,15 @@ const getNextCard = (number) => {
 	HighlightCardNumber = number;
 	return false;
 };
-
+function hie(){
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	// console.log(name);
+	const input = document.querySelector('#chat');
+	const text = input.value;
+	input.value = '';
+	sock.emit('message', { text, name, roomID });
+};
 const onChatSubmitted = (sock) => (e) => {
 	e.preventDefault();
 	var x = document.getElementById("frm1");
@@ -219,6 +228,8 @@ const onChatSubmitted = (sock) => (e) => {
 	input.value = '';
 	sock.emit('message', { text, name, roomID });
 };
+
+
 
 const onTurnDone = (sock) => (e) => {
 	e.preventDefault();
@@ -354,7 +365,7 @@ const memberMsg = (roomDetails) => {
 	sock.on('turn', ({ x, y, color }) => fillCell(x, y, color));
 
 	sock.on('turnNo', (number) => getNumber(number));
-	document.querySelector('#chat-form').addEventListener('submit', onChatSubmitted(sock));
+	// document.querySelector('#chat-form').addEventListener('submit', onChatSubmitted(sock));
 	// document.querySelector('#turn-form').addEventListener('submit', onTurnDone(sock));
 	// document.querySelector('#turn-form').addEventListener('submit', getNextCard);
 	// document.querySelector('#turnbtn').addEventListenser('click', turndone(sock));
@@ -371,4 +382,3 @@ const memberMsg = (roomDetails) => {
 5. then we pick another random number from remaining ones, and repeat.
 */
 // ---------------------------------------
-

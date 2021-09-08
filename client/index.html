@@ -11,17 +11,19 @@
 <body>
 	<canvas height="0" width="0"></canvas>
 	<div class="controls-wrapper">
+	<div id="msgbox" style="display: none;">
 		<ul id="events"></ul>
 
 		<div class="controls">
 			<div class="controls">
 				<div class="chat-wrapper">
-					<form id="chat-form">
+					<form id="chat-form" onsubmit="hie(); return false">
 						<input id="chat" autocomplete="off" title="chat" />
 						<button id="say">Say</button>
 					</form>
 				</div>
 			</div>
+		</div>
 			<div class="chat-wrapper">
 					<!-- <button id="turnbtn" >Turn Complete</button> -->
 
