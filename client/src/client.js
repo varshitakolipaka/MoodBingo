@@ -67,10 +67,10 @@ function renderEmptyBoard(row, optionc) {
 	document.getElementById("demo").innerHTML = s;
 
 	btns = 
-	`<button onclick="Turn()">Turn Complete</button>
-	 <button id="handbtn" onclick="raiseHand()">Raise Hand</button>
-	 <button id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
-	 <button id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
+	`<button class="gamebutton" onclick="Turn()">Turn Complete</button>
+	 <button class="gamebutton" id="handbtn" onclick="raiseHand()">Raise Hand</button>
+	 <button class="gamebutton" id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
+	 <button class="gamebutton" id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
 
 	document.getElementById("voting").innerHTML = btns;
 	document.getElementById("startbtn").style.display = "none";
