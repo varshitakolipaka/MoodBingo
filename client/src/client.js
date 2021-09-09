@@ -7,6 +7,7 @@ let roomID;
 let dict = {};
 let HighlightCardNumber = -1;
 let TurnCardNumber = -1;
+let interval;
 var options = [
 	{
 		name: "school",
@@ -37,10 +38,43 @@ function myFunction() {
 	if (optionc == "") {
 		optionc = "school"
 	}
-	sock.emit('submitted', { row, optionc, name, roomID});
+	sock.emit('submitted', { row, optionc, name, roomID });
 }
 
 
+const votingTimer = (raiseHandName) => {
+
+	var timer2 = "0:10";
+	var x = document.getElementById("frm1");
+	var name = x.elements[2].value;
+	interval = setInterval(function () {
+
+		var countdown = document.getElementById("countdown");
+		var timer = timer2.split(':');
+		//by parsing integer, I avoid all extra string processing
+		var minutes = parseInt(timer[0], 10);
+		var seconds = parseInt(timer[1], 10);
+		--seconds;
+		minutes = (seconds < 0) ? --minutes : minutes;
+		console.log(minutes, seconds);
+		seconds = (seconds < 0) ? 59 : seconds;
+		seconds = (seconds < 10) ? '0' + seconds : seconds;
+		//minutes = (minutes < 10) ?  minutes : minutes;
+		if (minutes < 0) {
+			clearInterval(interval);
+			if (name === raiseHandName) {
+				TurnCardNumber = HighlightCardNumber;
+				sock.emit('turnDone', { name, HighlightCardNumber, roomID });
+			}
+
+
+		} else {
+			countdown.innerHTML = minutes + ':' + seconds;
+			timer2 = minutes + ':' + seconds;
+		}
+	}, 1000);
+
+}
 
 
 function renderEmptyBoard(row, optionc) {
@@ -66,21 +100,25 @@ function renderEmptyBoard(row, optionc) {
 	}
 	document.getElementById("demo").innerHTML = s;
 
-	btns = 
-	`<button class="gamebutton" onclick="Turn()">Turn Complete</button>
-	 <button class="gamebutton" id="handbtn" onclick="raiseHand()">Raise Hand</button>
+	btns =
+		`<button class="gamebutton" id="handbtn" onclick="raiseHand()">Raise Hand</button>
 	 <button class="gamebutton" id="btnYes" type="button" style="display:none" onClick="addVoteYes()">YES</button>
-	 <button class="gamebutton" id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>`;
+	 <button class="gamebutton" id="btnNo" type="button" style="display:none" onClick="addVoteNo()">NO</button>
+	 <div id="countdown" style="display:none"></div>`;
+	document.getElementById("voting").innerHTML += ``;
+
 
 	document.getElementById("voting").innerHTML = btns;
+
 	document.getElementById("startbtn").style.display = "none";
-	
+
+
 
 	document.getElementById('create-div').style.display = "none";
-	
-	
-	
-	
+
+
+
+
 }
 
 
@@ -111,24 +149,32 @@ function renderEmptyBoard(row, optionc) {
 //     marked = -1;
 //   }
 // };
-function createRoom(){
+function createRoom() {
 	var val = Math.floor(1000 + Math.random() * 9000);
-	// console.log(val);
-	//append to the div this random val
+	var name = x.elements[2].value;
+	// console.log(roomID);
+	//append to the div this random roomID
 	document.getElementById('create-div').innerHTML = "Here's Your Room: " + val + "<br>Send the room id to your friends and enjoy! :)"
-
+	roomID = val;
 	sock.emit('newGameCreated', val);
+	enterLobby(val, name);
+
 	// sock.emit('create room',{val});
 }
-
-function joinRoom(){
-	//append to the div this random val
+function joinRoom() {
 	var x = document.getElementById("join-form");
 	var y = document.getElementById("frm1");
 	var name = y.elements[2].value;
-    roomID = x.elements[0].value; // get room-id
+	roomID = x.elements[0].value; // get room-id
+	enterLobby(roomID, name);
+}
+
+
+function enterLobby(roomID, name) {
+	//append to the div this random val
+
 	console.log(roomID);
-	sock.emit('joinRoom', {roomID, name});
+	sock.emit('joinRoom', { roomID, name });
 	document.getElementById('msgbox').style.display = "inline-block";
 	document.getElementById('startbtn').style.display = "inline-block";
 	document.getElementById('newgamebtn').style.display = "inline-block";
@@ -136,7 +182,7 @@ function joinRoom(){
 	document.getElementById("joinbtn").style.display = "none";
 	document.getElementById("join-form").style.display = "none";
 	document.getElementById("frm1").style.display = "none";
-	
+
 	// sock.emit('create room',{val});
 }
 
@@ -145,53 +191,68 @@ function joinRoom(){
 // 5678, SocketID: roomID; [(3456,1iskghfnkajsdg)(3257, osildhgfnwk)()]
 // sock.on('begin voting', function(){
 // document.getElementById("voting").innerHTML = " ";
-	
+
 // });
-function addVoteYes(){
+function addVoteYes() {
 	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
 	var vote = 1;
-	sock.emit('add vote yes', {roomID, name, vote});
+	// console.log(roomID);
+	sock.emit('add vote yes', { roomID, name, vote });
+	
 }
-function addVoteNo(){
+function addVoteNo() {
 	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
 	var vote = 0;
-	sock.emit('add vote no', {roomID, name, vote});
+	sock.emit('add vote no', { roomID, name, vote });
 }
-function beginVoting(){
-	var x = document.getElementById("frm1");
-	var name = x.elements[2].value;
-	document.getElementById("btnYes").style.display = "inline-block";
-	document.getElementById("btnNo").style.display = "inline-block";
-	sock.emit('begin voting',{roomID});
+function beginVoting(name) {
+	// document.getElementById("btnYes").style.display = "inline-block";
+	// document.getElementById("btnNo").style.display = "inline-block";
+
+	sock.emit('begin voting', { roomID, name });
+
 }
 
-function appendVoting(){
+const appendVoting = (raiseHandName) => {
 	console.log("hiee")
-	document.getElementById("btnYes").style.display = "inline-block";
-	document.getElementById("btnNo").style.display = "inline-block";
+	var name = x.elements[2].value;
+	let roomID;
+
+	if(name != raiseHandName){
+		document.getElementById("btnYes").style.display = "inline-block";
+		document.getElementById("btnNo").style.display = "inline-block";
+	}
+	document.getElementById("handbtn").style.display = "none";
+
+	
+	document.getElementById("countdown").style.display = "inline-block";
+
+	clearInterval(interval);
+	votingTimer(raiseHandName);
+
 
 }
 
-function disableVoting(){
+
+function disableVoting() {
 	document.getElementById("btnYes").style.display = "none";
 	document.getElementById("btnNo").style.display = "none";
+	document.getElementById("countdown").style.display = "none";
+	document.getElementById("handbtn").style.display = "inline-block";
 
 }
 
-function Turn(){
+function Turn(name) {
 
 	// onTurnDone(sock);
-	var x = document.getElementById("frm1");
-
-	var name = x.elements[2].value;
 	TurnCardNumber = HighlightCardNumber;
 	console.log(HighlightCardNumber);
-	document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
+	// document.getElementById(HighlightCardNumber).style.backgroundColor = "pink";
 	disableVoting();
-	sock.emit('turnDone', { name, HighlightCardNumber, roomID });
-	return false;
+	// sock.emit('turnDone', { name, HighlightCardNumber, roomID });
+	// return false;
 }
 
 const log = (text) => {
@@ -205,6 +266,9 @@ const log = (text) => {
 
 //make card purple
 const getNextCard = (number) => {
+
+	disableVoting();
+	
 	const parent = document.querySelector('#events');
 	const el = document.createElement('li');
 	console.log(dict);
@@ -219,7 +283,7 @@ const getNextCard = (number) => {
 	HighlightCardNumber = number;
 	return false;
 };
-function msg(){
+function msg() {
 	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
 	// console.log(name);
@@ -255,17 +319,15 @@ const onTurnDone = (sock) => (e) => {
 	return false;
 };
 
-function raiseHand()
-{
-	document.getElementById(HighlightCardNumber).style.backgroundColor = "orange";
+function raiseHand() {
+
 	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
-
-
-	const text = "Raised hands!" ;
-
+	const text = "Raised hands!";
 	sock.emit('message', { text, name, roomID });
-	beginVoting();
+
+	document.getElementById(HighlightCardNumber).style.backgroundColor = "orange";
+	beginVoting(name);
 
 }
 
@@ -338,15 +400,14 @@ const getBoard = (canvas, numCells = 20) => {
 const memberMsg = (roomDetails) => {
 	const parent = document.querySelector('#memdiv');
 	parent.innerHTML = "Members Currently:"
-	for(var i=0 ; i<roomDetails.length ; i++)
-	{
+	for (var i = 0; i < roomDetails.length; i++) {
 		const el = document.createElement('li');
 		el.innerHTML = roomDetails[i];
 		parent.appendChild(el);
 	}
-	
 
-	
+
+
 	// parent.scrollTop = parent.scrollHeight;
 };
 
@@ -370,7 +431,7 @@ const memberMsg = (roomDetails) => {
 	sock.on('board', reset);
 	sock.on('message', log);
 
-	sock.on('append voting', appendVoting());
+	sock.on('append voting', appendVoting);
 	// sock.on('mem', members);
 	sock.on('turn', ({ x, y, color }) => fillCell(x, y, color));
 
@@ -392,3 +453,6 @@ const memberMsg = (roomDetails) => {
 5. then we pick another random number from remaining ones, and repeat.
 */
 // ---------------------------------------
+
+
+
