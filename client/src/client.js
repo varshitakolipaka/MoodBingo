@@ -77,6 +77,7 @@ function renderEmptyBoard(row, optionc) {
 	document.getElementById("joinbtn").style.display = "none";
 	document.getElementById("join-form").style.display = "none";
 	document.getElementById('create-div').style.display = "none";
+	document.getElementById('createbtn').style.display = "none";
 	
 	
 }
@@ -113,7 +114,7 @@ function createRoom(){
 	var val = Math.floor(1000 + Math.random() * 9000);
 	// console.log(val);
 	//append to the div this random val
-	document.getElementById('create-div').innerHTML = "Here's Your Room: " + val + "<br>Send the link to your friends and enjoy! :)"
+	document.getElementById('create-div').innerHTML = "Here's Your Room: " + val + "<br>Send the room id to your friends and enjoy! :)"
 
 	sock.emit('newGameCreated', val);
 	// sock.emit('create room',{val});
@@ -129,6 +130,8 @@ function joinRoom(){
 	sock.emit('joinRoom', {roomID, name});
 	document.getElementById('msgbox').style.display = "inline-block";
 	document.getElementById('frm1').style.display = "none";
+	document.getElementById('startbtn').style.display = "inline-block";
+	
 	// sock.emit('create room',{val});
 }
 
@@ -211,7 +214,7 @@ const getNextCard = (number) => {
 	HighlightCardNumber = number;
 	return false;
 };
-function hie(){
+function msg(){
 	var x = document.getElementById("frm1");
 	var name = x.elements[2].value;
 	// console.log(name);

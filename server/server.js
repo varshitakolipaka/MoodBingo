@@ -162,7 +162,7 @@ io.sockets.on('connection', function (sock) {
 			console.log(roomID);
 			roomDetails = roomIDArr[roomID]["members"];
 			console.log(roomDetails);
-			show_message = "Hi " + name + "! Welcome to room: " + roomID;
+			show_message = "Hi " + name + "! Welcome to room: " + roomID + "<br> You can chill in the lobby and chat till we start the game! :)";
 			io.to(roomID).emit('mem', roomDetails);
 			io.to(roomID).emit("message", show_message);
 		}
@@ -223,7 +223,7 @@ io.sockets.on('connection', function (sock) {
 		console.log(row);
 		console.log(optionc);
 		console.log(name);
-		joined = name + " joined.";
+		joined = name + " started the game!";
 		cardcount[name] = [];
 		console.log(cardcount);
 		io.to(roomID).emit("message", joined);
