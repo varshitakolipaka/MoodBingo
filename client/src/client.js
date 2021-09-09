@@ -74,10 +74,11 @@ function renderEmptyBoard(row, optionc) {
 
 	document.getElementById("voting").innerHTML = btns;
 	document.getElementById("startbtn").style.display = "none";
-	document.getElementById("joinbtn").style.display = "none";
-	document.getElementById("join-form").style.display = "none";
+	
+
 	document.getElementById('create-div').style.display = "none";
-	document.getElementById('createbtn').style.display = "none";
+	
+	
 	
 	
 }
@@ -129,8 +130,12 @@ function joinRoom(){
 	console.log(roomID);
 	sock.emit('joinRoom', {roomID, name});
 	document.getElementById('msgbox').style.display = "inline-block";
-	document.getElementById('frm1').style.display = "none";
 	document.getElementById('startbtn').style.display = "inline-block";
+	document.getElementById('newgamebtn').style.display = "inline-block";
+	document.getElementById('createbtn').style.display = "none";
+	document.getElementById("joinbtn").style.display = "none";
+	document.getElementById("join-form").style.display = "none";
+	document.getElementById("frm1").style.display = "none";
 	
 	// sock.emit('create room',{val});
 }
