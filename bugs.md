@@ -7,4 +7,8 @@ add room number = something in url
 -   add option for custom presets
 -   when new player joins, we also give them an ID, so that same name, different players can join with same name
 -   players can't vote for themselves
--   
+-   pink color even when card is not won
+-   game over and deleted room
+
+
+**npm install random-words** installataion needed
