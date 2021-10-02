@@ -15,7 +15,35 @@ add room number = something in url
 -   go back to lobby, to add other people
 -   if nobody selects, go to next card (host only)
 -   give new game perms, start game, etc. only for host 
--   
+-   change href on create and join from <a> to <div>
 
 
 **npm install random-words** installataion needed
+```
+// function getNumber(number) {
+//   console.log(number);
+//   HighlightCardNumber = number;
+//   // console.log("i am here");
+//   // HighlightCardNumber = number;
+//   // document.style.backgroundColor = 'black';
+//   // colorj.style.backgroundColor = "purple";
+// }
+
+// var marked = -1;
+// s
+// function highlight(clicked_id){
+//   console.log(clicked_id);
+//   console.log("hi");
+//   if(document.getElementById(clicked_id).style.backgroundColor != "yellow" && marked == -1 && document.getElementById(clicked_id).style.backgroundColor != "purple" )
+//   {
+//     console.log("not Y");
+//     document.getElementById(clicked_id).style.backgroundColor = "yellow";
+//     marked = clicked_id;
+//   }
+//   else if(document.getElementById(clicked_id).style.backgroundColor == "yellow")
+//   {
+//     console.log("Y");
+//     document.getElementById(clicked_id).style.backgroundColor = "lightblue";
+//     marked = -1;
+//   }
+// };```

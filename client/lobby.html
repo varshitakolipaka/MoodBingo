@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>my game</title>
+    <link rel="icon" href="img/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="controls-wrapper" style="display: flex; flex-direction: row;">
+        <div class="col-md-8" id="msgbox">
+            <ul id="events"></ul>
+
+            <div class="controls">
+                <div class="controls">
+                    <div class="chat-wrapper">
+                        <form class="container-fluid" id="chat-form" onsubmit="msg(); return false">
+                            <div class="form-group">
+                                <input id="chat" autocomplete="off" title="chat" />
+                            </div>
+                            <div class="form-group">
+                                <button id="say">Say</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" id="memdiv" style="display: inline-block;">
+
+        </div>
+        <br>
+
+    </div>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="src/client.js"></script>
+    <script> window.addEventListener('load', function () {
+            console.log('All assets are loaded');
+            setGlobalVariables();
+            enterLobby(roomID, uID);
+            // setSocketID();
+        })</script>
+</body>
+
+</html>

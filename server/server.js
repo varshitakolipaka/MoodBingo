@@ -1,3 +1,4 @@
+const socketUrl = 'http://localhost:8080';
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
@@ -7,7 +8,7 @@ const createCooldown = require("./create-cooldown");
 
 const app = express();
 var cardcount = {};
-var Norow;
+var Norow; 
 var roomIDArr = {};
 var TEST, number, status;
 
@@ -18,6 +19,10 @@ const server = http.createServer(app);
 const io = socketio(server);
 const { clear, getBoard, makeTurn } = createBoard(20);
 
+// const connection = () => {
+// 	socket = io(socketUrl, {
+// 	  autoConnect: false,
+// 	});
 
 function shuffleArray(array) {
 	for (var i = array.length - 1; i > 0; i--) {
@@ -45,6 +50,7 @@ function addAndSort(arr, val) {
 var isSquare = function (n) {
 	return Math.sqrt(n) % 1 === 0;
 };
+
 
 
 const declareWinner = (array, rows) => {
@@ -134,22 +140,26 @@ function modifyVotes(vote, roomID) {
 }
 
 
-function initVotes(roomID , uID, name) {
+function initVotes(roomID , uID, username) {
 	roomIDArr[roomID]["yes_votes"] = 0;
 	roomIDArr[roomID]["total_votes"] = 0;
 	// ((roomIDArr[roomID])["members"][uID])["voting_status"] = -1;
-	message = name + "has begun voting round has begun! <3  :)"
+	message = username + "has begun voting round has begun! <3  :)"
 	io.to(roomID).emit("message", message);
 	io.to(roomID).emit("append voting", uID)
 }
+const connect = () => {
+	socket = io(socketUrl, {
+	  autoConnect: false,
+	});
 
-
-io.sockets.on('connection', function (sock) {
-
+io.sockets.on('connect', function (sock) {
+	console.log('In Connect with msg: hi');
+	console.log(sock.id);
 	const cooldown = createCooldown(2000);
 
 	sock.on('newGameCreated', (roomID) => {
-		console.log(roomID);
+ 
 		roomIDArr[roomID] = {};
 		(roomIDArr[roomID])["members"] = {};
 		(roomIDArr[roomID])["yes_votes"] = 0;
@@ -158,20 +168,23 @@ io.sockets.on('connection', function (sock) {
 		// console.log(roomIDArr);
 	});
 
-	sock.on("joinRoom", function ({ roomID, uID, name }) {
-		console.log(roomIDArr);
+	sock.on("joinRoom", function({ roomID, uID, username }){
+		// console.log(roomIDArr);
+		
+		console.log("server says: " + sock.id);
 		if (roomID in roomIDArr && roomIDArr[roomID]["join"] == 1) {
 			(roomIDArr[roomID])["members"][uID] = {};
-			roomIDArr[roomID]["members"][uID]["name"] = name;
+			roomIDArr[roomID]["members"][uID]["name"] = username;
 			((roomIDArr[roomID])["members"][uID])["voting_status"] = -1;
 			cardcount[uID] = [];
 			sock.join(roomID);
 			console.log(roomID);
-			roomDetails = roomIDArr[roomID]["members"];
-			console.log(roomDetails);
-			show_message = "Hi " + name + "! Welcome to room " + roomID + "<br> You can chill in the lobby and chat till we start the game! :)";
+			var roomDetails = roomIDArr[roomID]["members"];
+			console.log("ROOM DETAILS, HERE GOES: " + roomDetails);
+			show_message = "Hi " + username + "! Welcome to room " + roomID + "<br> You can chill in the lobby and chat till we start the game! :)";
 			io.to(roomID).emit('mem', roomDetails);
 			io.to(roomID).emit("message", show_message);
+			io.emit("OMG");
 		}
 
 		else {
@@ -180,32 +193,32 @@ io.sockets.on('connection', function (sock) {
 		}
 	});
 
-	sock.on("message", ({ text, uID, roomID, name }) => {
-		show_message = name + ": " + text;
+	sock.on("message", ({ text, uID, roomID, username }) => {
+		show_message = username + ": " + text;
 		io.to(roomID).emit("message", show_message);
 	});
 	// sock.emit('begin voting',{roomID})
 
-	sock.on("add vote yes", ({ roomID, uID, vote, name }) => {
-		show_message = name + " voted yes.";
+	sock.on("add vote yes", ({ roomID, uID, vote, username }) => {
+		show_message = username + " voted yes.";
 		console.log(vote);
 		io.to(roomID).emit("message", show_message);
 		modifyVotes(vote, roomID);
 
 	});
 
-	sock.on("add vote no", ({ roomID, uID, vote, name }) => {
-		show_message = name + " voted no.";
+	sock.on("add vote no", ({ roomID, uID, vote, username }) => {
+		show_message = username + " voted no.";
 		console.log(vote);
 		io.to(roomID).emit("message", show_message);
 		modifyVotes(vote, roomID);
 	});
 
-	sock.on("begin voting", ({ roomID, uID, name}) => {
-		initVotes(roomID, uID, name);
+	sock.on("begin voting", ({ roomID, uID, username}) => {
+		initVotes(roomID, uID, username);
 	});
 
-	sock.on("submitted", ({ row, optionc, uID, roomID, name }) => {
+	sock.on("submitted", ({ row, optionc, uID, roomID, username }) => {
 		if (roomID in roomIDArr) {
 
 			roomIDArr[roomID]["join"] = 0;
@@ -230,7 +243,7 @@ io.sockets.on('connection', function (sock) {
 			console.log(row);
 			console.log(optionc);
 			console.log(uID);
-			joined = name + " started the game!";
+			joined = username + " started the game!";
 			cardcount[uID] = [];
 			console.log(cardcount);
 			io.to(roomID).emit("message", joined);
@@ -249,19 +262,19 @@ io.sockets.on('connection', function (sock) {
 	}
 	);
 
-	sock.on("turnDone", ({ uID, HighlightCardNumber, roomID, name }) => {
+	sock.on("turnDone", ({ uID, HighlightCardNumber, roomID, username }) => {
 		console.log("simply simply anusha be like:");
 
-		joined = name + " chose this card " + HighlightCardNumber;
+		joined = username + " chose this card " + HighlightCardNumber;
 		yesVotes = parseInt(roomIDArr[roomID]["yes_votes"]);
 		majorityVotes = Math.ceil(0.75 * parseInt(roomIDArr[roomID]["total_votes"]));
 		console.log("MAJORITY = " + majorityVotes);
 		if (yesVotes >= majorityVotes && majorityVotes != 0) {
 			addAndSort(cardcount[uID], HighlightCardNumber);
-			let message = name + " won the card!";
+			let message = username + " won the card!";
 			io.to(roomID).emit("message",message);
 			let winstat;
-			message = name + " won using ";
+			message = username + " won using ";
 			winstat = declareWinner(cardcount[uID], Norow);
 			switch (winstat) {
 				case 0:
@@ -287,7 +300,7 @@ io.sockets.on('connection', function (sock) {
 		}
 
 		else{
-			message = name + " lost the card! Majority did not vote yes! :(";
+			message = username + " lost the card! Majority did not vote yes! :(";
 			io.to(roomID).emit("message",message);
 			
 		}

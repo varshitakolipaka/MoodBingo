@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>my game</title>
+	<title>Anar</title>
 	<link rel="icon" href="img/favicon.png">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -12,31 +12,7 @@
 
 <body>
 	<canvas height="0" width="0"></canvas>
-	<div class="controls-wrapper" style="display: flex; flex-direction: row;">
-		<div class="col-md-8" id="msgbox" style="display: none;">
-			<ul id="events"></ul>
 
-			<div class="controls">
-				<div class="controls">
-					<div class="chat-wrapper">
-						<form class="container-fluid" id="chat-form" onsubmit="msg(); return false">
-							<div class="form-group">
-								<input id="chat" autocomplete="off" title="chat" />
-							</div>
-							<div class="form-group">
-								<button id="say">Say</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4" id="memdiv" style="display: inline-block;">
-
-		</div>
-		<br>
-
-	</div>
 	<form class="container-fluid col-md-8 align-items-center" id="frm1">
 		<div class="form-group">
 			<label>Rows:</label>
@@ -59,7 +35,8 @@
 	<div class="container-fluid col-md-8 align-items-center" id="join-create">
 
 
-		<div><button class="gamebutton" id="createbtn" type="button" onClick="createRoom()">CREATE</button></div>
+		<div><button class="gamebutton" id="createbtn" type="button" onClick="createRoom()"><a
+					href="./lobby.html">CREATE</a></button></div>
 		<div id="create-div">
 
 		</div>
@@ -68,7 +45,8 @@
 			<form id="join-form">
 				ROOM ID:
 				<input type="text" name="room_nr" required /><br /><br />
-				<button class="gamebutton" type="button" id="joinbtn" onClick="joinRoom()">JOIN</button>
+				<button class="gamebutton" type="button" id="joinbtn" onClick="joinRoom()"> <a
+						href="./lobby.html">JOIN</a> </button>
 			</form>
 		</div>
 		<div class="col-md-12">
@@ -96,10 +74,12 @@
 
 
 	</div>
-	</div>
-	<div id="demo">
 
-	</div>
+	<!-- </div> -->
+	<!-- useless div, delete later after checking -->
+	<!-- <div id="demo">
+
+	</div> -->
 
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
