@@ -20,7 +20,10 @@
   "author": "Juriy Bura <juriy.bura@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "browserify-fs": "^1.0.0",
     "express": "^4.17.1",
+    "express-handlebars": "^5.3.4",
+    "fs": "0.0.1-security",
     "random-words": "^1.1.1",
     "randomcolor": "^0.5.4",
     "socket.io": "^2.3.0"

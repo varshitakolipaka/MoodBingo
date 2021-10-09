@@ -1,0 +1,20 @@
+[
+	{
+		"uID": "school",
+
+		"cards": [
+			"bunked class",
+			"got detention",
+			"brought alcohol",
+			"eaten in class",
+			"skipped homework",
+			"gotten hit",
+			"suspended",
+			"been called dumb",
+			"been at the top of class",
+			"written on my shirt",
+			"lied for my friends"
+		],
+		"type": "default"
+	}
+]

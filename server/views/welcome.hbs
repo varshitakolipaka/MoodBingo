@@ -1,0 +1,44 @@
+<div id="welcome">
+<form class="container-fluid col-md-6 align-items-center" id="frm1">
+
+	<div class="form-group">
+		<label>Name:</label>
+		<br>
+		<input type="text" name="name" placeholder="Enter name" required /><br /><br />
+	</div>
+
+
+	<div class="form-group">
+		<label>Preset:</label>
+		<br>
+		<input type="text" name="optionc" placeholder="Enter preset option" required />
+	</div>
+
+
+	<div class="form-group">
+		<label>Rows:</label>
+		<br>
+		<input type="number" name="rows" placeholder="Number of rows" value="3" />
+	</div>
+
+
+</form>
+
+<div style="display: flex; justify-content: center"><button class="gamebutton" id="createbtn" type="button" onClick="createRoom()">CREATE</button></div>
+
+
+<br>
+
+
+<form id="join-form" id="join-div" class="container-fluid col-md-6 align-items-center">
+	<div class="form-group">
+		<label></label>Room ID:</label>
+		<br>
+		<input type="text" name="room_nr" placeholder="Enter room ID" required /><br /><br />
+	</div>
+	
+</form>
+
+
+<div style="display: flex; justify-content: center"><button class="gamebutton" type="button" id="joinbtn" onClick="joinRoom()">JOIN</button></div>
+</div>
