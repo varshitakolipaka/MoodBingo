@@ -2,5 +2,26 @@
   "dependencies": {
     "clipboard": "^2.0.8",
     "random-words": "^1.1.1"
-  }
+  },
+  "name": "moodbingo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/varshitakolipaka/MoodBingo.git"
+  },
+  "engines": {
+    "node": "14.15.1"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/varshitakolipaka/MoodBingo/issues"
+  },
+  "homepage": "https://github.com/varshitakolipaka/MoodBingo#readme",
+  "description": ""
 }
