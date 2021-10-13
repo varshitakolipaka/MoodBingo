@@ -1,3 +1,11 @@
+/*
+ ----------------------------------
+ filename: check_winner.js 
+ (local module)
+ ----------------------------------- 
+ */
+
+//function to get the winning status after every turn
 const declareWinner = (array, rows) => {
 
 	//rows
@@ -20,7 +28,6 @@ const declareWinner = (array, rows) => {
 	}
 
 	//column
-
 	var len = arr.length;
 
 	for (var rem = 0; rem < rows; rem += 1) {
@@ -42,7 +49,6 @@ const declareWinner = (array, rows) => {
 	}
 
 	//diagonal 1
-
 	var count = 0;
 	for (var j = 0; j < len; j += 1) {
 

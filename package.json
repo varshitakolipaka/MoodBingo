@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "clipboard": "^2.0.8",
     "random-words": "^1.1.1"
   }
 }

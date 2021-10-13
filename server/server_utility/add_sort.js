@@ -1,5 +1,13 @@
-function addAndSort(arr, val) {
-    console.log("addandsort")
+/*
+ ----------------------------------
+ filename: shuffle_array.js 
+ (local module)
+ ----------------------------------- 
+ */
+
+ //function to keep track of the card won by a user
+ function addAndSort(arr, val) {
+   
 	arr.push(val);
 	i = arr.length - 1;
 	item = arr[i];
