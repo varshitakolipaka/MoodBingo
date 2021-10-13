@@ -1,6 +1,6 @@
 [
 	{
-		"uID": "school",
+		"uID": "School Vibes",
 
 		"cards": [
 			"bunked class",
@@ -16,5 +16,64 @@
 			"lied for my friends"
 		],
 		"type": "default"
+	},
+
+	{
+		"uID": "Stranger Danger",
+
+		"cards": [
+			"jumped in a pool with all my clothes on",
+			"stayed out past three in the morning",
+			"lived completely alone",
+			"re-gifted a gift",
+			"went viral online",
+			"gotten a tattoo",
+			"seen a famous person on the street",
+			"told a lie to my best friend",
+			"watched an entire TV marathon",
+			"written on my shirt",
+			"made up a story to impress someone"
+		],
+
+		"type": "default"
+	},
+
+	{
+		"uID": "Family Time",
+
+		"cards": [
+			"lied to my parents about where I was going",
+			"bought my sibling something I wasn't supposed to",
+			"snuck out of the house",
+			"stole clothes from a sibling",
+			"pretended to be asleep so I didn't need to help with something",
+			"cooked a meal for the entire family",
+			"crashed a wedding",
+			"accidentally set a meal on fire",
+			"showed up tipsy to a family function",
+			"had someone at my parent's house without them knowing",
+			"lied for my sibling"
+		],
+		"type": "default"
+	},
+
+	{
+		"uID": "Girls Night Out",
+
+		"cards": [
+			"had a crush on a friend's partner",
+			"received free drinks at a bar",
+			"stalked an ex-partner on social media",
+			"ordered pizza after midnight",
+			"appeared on a TV show",
+			"sent a drink to a stranger",
+			"slept in my roommate's bed",
+			"been a bridesmaid",
+			"sent myself flowers",
+			"was invited on stage at a concert",
+			"lied for my friends"
+		],
+		"type": "default"
 	}
+
 ]
