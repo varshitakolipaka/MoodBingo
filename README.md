@@ -13,8 +13,9 @@ To locally install it on your machine, run the following script written below on
  cd server
  nodemon server.js
 ```
-
+<br>
 The game is also hosted on Heroku. Join the link below and get ready to play!
+<br>
 Link: https://mood-bingo.herokuapp.com/
 
 ---
