@@ -8,6 +8,7 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
+    "start": "cd server && node server.js",
     "test": "mocha"
   },
   "repository": {

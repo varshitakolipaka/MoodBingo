@@ -14,7 +14,7 @@
 
 
 //socketUrl
-const socketUrl = 'http://localhost:8080';
+const socketUrl = '/';
 
 //modules
 const http = require("http");
@@ -317,6 +317,17 @@ io.sockets.on('connect', function (sock) {
 
 	});
 
+
+    //to add custom propmpts
+	sock.on("write custom preset", (jsonw) =>{
+		server_options.push(jsonw);
+		console.log(server_options);
+		json_write = JSON.stringify(server_options);
+		fs.writeFile("./data/game_options.json",json_write, (err) =>{
+			if(err) {console.log(err);}
+	    });
+	})
+
 });
 
 /* -------  server ------------*/
@@ -325,6 +336,6 @@ server.on("error", (err) => {
 	console.error(err);
 });
 
-server.listen(8080, () => {
+server.listen(process.env.PORT || 8080, () => {
 	console.log("server is ready");
 });

@@ -13,7 +13,7 @@ let HighlightCardNumber = -1, TurnCardNumber = -1, winCard = -1;
 let interval;
 
 //setting up connection with the host
-let socket = io.connect('http://localhost:8080'); 
+let socket = io.connect('/'); 
 
 //debug statement to check the sock.id of a particular person
 socket.on('connect', () => {
@@ -136,6 +136,24 @@ const memberMsg = (Members) => {
 	});
 };
 
+//to add custom propmpts
+function addPreset(){
+	var x = document.getElementById("custom-propmt");
+	var presetName = x.elements[0].value;
+	presetName = presetName.trim();
+	var options = x.elements[1].value;
+	var optionsarr = options.split(',')
+	var jsonw = '{\n "uID": "' + presetName + '", "cards": [';
+	for (let i = 0; i < optionsarr.length; i++){
+		optionsarr[i] = optionsarr[i].trim();
+		jsonw+= '"'+ optionsarr[i] + '"'
+		if(i != optionsarr.length - 1){ jsonw+= ',';}
+	}
+	jsonw += '],"type": "custom"}'
+	var jsonw = JSON.parse(jsonw)
+	sock.emit("write custom preset", jsonw);
+
+}
  /*
 ---------------------------------------------------
 	            Message and ChatBox
