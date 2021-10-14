@@ -14,7 +14,7 @@
 
 
 //socketUrl
-const socketUrl = 'http://localhost:8080';
+const socketUrl = '/';
 
 //modules
 const http = require("http");

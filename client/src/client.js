@@ -13,7 +13,7 @@ let HighlightCardNumber = -1, TurnCardNumber = -1, winCard = -1;
 let interval;
 
 //setting up connection with the host
-let socket = io.connect('http://localhost:8080'); 
+let socket = io.connect('/'); 
 
 //debug statement to check the sock.id of a particular person
 socket.on('connect', () => {
