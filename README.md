@@ -1,11 +1,15 @@
-# MoodBingo
+# MoodBingo!
 
-![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/client/img/game_icon.png)
-
-## Abstract
+<br>
 A heuristic based multiplayer game of bingo with server rooms and customised prompts. The game brings together communities and puts a stake on telling the truth victory!
 
----
+<br> 
+<br>
+<br>
+
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/client/img/vidgame.svg)
+
+
 ## Installation
 
 To locally install it on your machine, run the following script written below on the terminal. Ensure that after cloning the repo, you change your working directory to MoodBingo directory.
@@ -32,6 +36,8 @@ The player who wins a row ,column or diagonal first wins the game!
 ---
 
 ## How to Play
+
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/client/img/howtoplay.svg)
 
 ### Getting Started!
 
