@@ -317,6 +317,17 @@ io.sockets.on('connect', function (sock) {
 
 	});
 
+
+    //to add custom propmpts
+	sock.on("write custom preset", (jsonw) =>{
+		server_options.push(jsonw);
+		console.log(server_options);
+		json_write = JSON.stringify(server_options);
+		fs.writeFile("./data/game_options.json",json_write, (err) =>{
+			if(err) {console.log(err);}
+	    });
+	})
+
 });
 
 /* -------  server ------------*/

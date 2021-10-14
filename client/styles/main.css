@@ -3,12 +3,6 @@ body {
   padding: 0;
 }
 
-input {
-  outline: none;
-  font-size: 1.0rem;
-  padding: 0 5px;
-}
-
 button {
   text-transform: uppercase;
   font-size: 0.8rem;
@@ -33,6 +27,14 @@ button.turn:hover {
   background-color: #eaeaea;
 }
 
+input{
+  width: 100% !important;
+}
+
+textarea{
+  width: 100% !important;
+}
+
 ul {
   list-style: none;
   margin: 0;
@@ -43,11 +45,6 @@ ul {
 
 li {
   padding: 10px 10px 10px 10px;
-}
-
-canvas {
-  display: block;
-  margin: 10px auto;
 }
 
 .controls-wrapper {

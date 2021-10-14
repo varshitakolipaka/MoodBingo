@@ -136,6 +136,24 @@ const memberMsg = (Members) => {
 	});
 };
 
+//to add custom propmpts
+function addPreset(){
+	var x = document.getElementById("custom-propmt");
+	var presetName = x.elements[0].value;
+	presetName = presetName.trim();
+	var options = x.elements[1].value;
+	var optionsarr = options.split(',')
+	var jsonw = '{\n "uID": "' + presetName + '", "cards": [';
+	for (let i = 0; i < optionsarr.length; i++){
+		optionsarr[i] = optionsarr[i].trim();
+		jsonw+= '"'+ optionsarr[i] + '"'
+		if(i != optionsarr.length - 1){ jsonw+= ',';}
+	}
+	jsonw += '],"type": "custom"}'
+	var jsonw = JSON.parse(jsonw)
+	sock.emit("write custom preset", jsonw);
+
+}
  /*
 ---------------------------------------------------
 	            Message and ChatBox
