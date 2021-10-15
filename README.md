@@ -27,7 +27,7 @@ Link: https://mood-bingo.herokuapp.com/
 
 ## About the Game
 
-The game is a never before seen mix of our favourite board games "Never Have I Ever" and "Bingo!". The player is presented on a set of never have I ever prompts in a traditional bingo setting. 
+The game is a never before seen mix of our favourite board games "Never Have I Ever" and "Bingo!". The player is presented a set of never have I ever prompts in a traditional bingo setting. 
 
 Each round a random card is chosen and players race against each other to raise hands and get a chance to bag the card. The player who raised their hands first has to now convince his fellow rivals that he indeed is deserving of the card before the voting round ends. 
 
