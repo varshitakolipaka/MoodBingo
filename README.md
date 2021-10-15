@@ -3,6 +3,9 @@
 <br>
 A heuristic based multiplayer game of bingo with server rooms and customised prompts. The game brings together communities and puts a stake on telling the truth victory!
 
+<br>
+Play the game here: https://mood-bingo.herokuapp.com/
+
 <br> 
 <br>
 <br>
