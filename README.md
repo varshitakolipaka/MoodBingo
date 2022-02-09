@@ -39,6 +39,21 @@ The player who wins a row ,column or diagonal first wins the game!
 
 ---
 
+## Demo
+
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/game_new.gif)
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/game_join.gif)
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/game_raise_hand.gif)
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/game_yes_no.gif)
+
+### Custom Prompts
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/custom_prompt_1.png)
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/custom_prompt_2.png)
+![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/README_assets/custom_prompt_3.png)
+
+---
+
+
 ## How to Play
 
 ![alt text](https://github.com/varshitakolipaka/MoodBingo/blob/master/client/img/howtoplay.svg)
