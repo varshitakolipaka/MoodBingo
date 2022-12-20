@@ -5,7 +5,8 @@ A heuristic based multiplayer game of bingo with server rooms and customised pro
 
 <br>
 <br>
-Play the game here: https://mood-bingo.herokuapp.com/
+Play the game here: (currently unaviable due to paid heroku hosting)
+https://mood-bingo.herokuapp.com/
 
 <br> 
 <br>
